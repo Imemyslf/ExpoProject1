@@ -1,0 +1,63 @@
+{
+  "four_wheeler_companies": [
+    {
+      "name": "Maruti Suzuki India Limited",
+      "logo": "Maruti_Suzuki_logo.png",
+      "description": "As the largest automobile manufacturer in India, Maruti Suzuki specializes in small cars and holds a leading market share. Established in 1981, it has been instrumental in shaping India's automotive industry.",
+      "models": [
+        "Maruti Suzuki Alto",
+        "Maruti Suzuki Swift",
+        "Maruti Suzuki Baleno",
+        "Maruti Suzuki Dzire",
+        "Maruti Suzuki Vitara Brezza"
+      ]
+    },
+   {
+      "name": "Hyundai Motor India Limited",
+      "logo": "Hyundai_Motor_logo.png",
+      "description": "A subsidiary of the South Korean automaker, Hyundai has a strong presence in the Indian market, offering a variety of models that cater to different consumer preferences.",
+      "models": [
+        "Hyundai Creta",
+        "Hyundai Verna",
+        "Hyundai i20",
+        "Hyundai Venue",
+        "Hyundai Kona Electric"
+      ]
+    },{
+      "name": "Tata Motors Limited",
+      "logo": "Tata_Motors_logo.png",
+      "description": "A part of the Tata Group, Tata Motors offers a diverse range of vehicles, including electric cars. The company is investing in local EV battery production to maintain its market position.",
+      "models": [
+        "Tata Nexon",
+        "Tata Harrier",
+        "Tata Tiago",
+        "Tata Altroz",
+        "Tata Safari"
+      ]
+    },
+    {
+      "name": "Mahindra & Mahindra Limited",
+      "logo": "Mahindra_Mahindra_logo.png",
+      "description": "Known for its SUVs and electric vehicles, Mahindra & Mahindra has been a significant player in India's automotive sector. The company is focusing on expanding its electric vehicle lineup to meet growing demand.",
+      "models": [
+        "Mahindra Thar",
+        "Mahindra XUV700",
+        "Mahindra Scorpio",
+        "Mahindra XUV300",
+        "Mahindra Bolero"
+      ]
+    },
+    {
+      "name": "Honda Cars India Limited",
+      "logo": "Honda_Cars_logo.png",
+      "description": "A subsidiary of the Japanese automaker, Honda offers a range of vehicles in India, known for their reliability and fuel efficiency.",
+      "models": [
+        "Honda City",
+        "Honda Amaze",
+        "Honda WR-V",
+        "Honda Jazz",
+        "Honda Civic"
+      ]
+    }
+  ]
+}
