@@ -20,16 +20,13 @@
         "Hyundai Creta",
         "Hyundai Verna",
         "Hyundai i20",
-        "Hyundai Venue",
-        "Hyundai Kona Electric"
+        "Hyundai Venue"
       ]
     },{
       "name": "Tata Motors Limited",
       "logo": "Tata_Motors_logo.png",
       "description": "A part of the Tata Group, Tata Motors offers a diverse range of vehicles, including electric cars. The company is investing in local EV battery production to maintain its market position.",
       "models": [
-        "Tata Nexon",
-        "Tata Harrier",
         "Tata Tiago",
         "Tata Altroz",
         "Tata Safari"
@@ -41,7 +38,6 @@
       "description": "Known for its SUVs and electric vehicles, Mahindra & Mahindra has been a significant player in India's automotive sector. The company is focusing on expanding its electric vehicle lineup to meet growing demand.",
       "models": [
         "Mahindra Thar",
-        "Mahindra XUV700",
         "Mahindra Scorpio",
         "Mahindra XUV300",
         "Mahindra Bolero"
@@ -54,9 +50,7 @@
       "models": [
         "Honda City",
         "Honda Amaze",
-        "Honda WR-V",
-        "Honda Jazz",
-        "Honda Civic"
+        "Honda WR-V"
       ]
     }
   ]
