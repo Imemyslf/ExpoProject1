@@ -1,17 +1,9 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  FlatList,
-  Image,
-  Pressable,
-} from "react-native";
+import { Text, View, StyleSheet, FlatList } from "react-native";
 import companyData from "./Data/Company.json";
-import { useEffect, useState } from "react";
 import { useCompany } from "./Context/StoreContext";
 import { useRouter } from "expo-router";
+import CompanyCard from "./Components/Pressable"; // Import the new component
 
-// Image mapping (Static import is required in React Native)
 const imageMap: { [key: string]: any } = {
   "Maruti_Suzuki_logo.png": require("../assets/images/Company/Maruti_Suzuki.png"),
   "Tata_Motors_logo.png": require("../assets/images/Company/Tata_Motors.png"),
@@ -22,12 +14,7 @@ const imageMap: { [key: string]: any } = {
 
 export default function Index() {
   const { selectedCompany, setSelectedCompany } = useCompany();
-  const [companyName, setCompanyName] = useState("");
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(`Selected Company:- ${selectedCompany}`);
-  }, [selectedCompany]);
 
   return (
     <View style={styles.container}>
@@ -35,34 +22,19 @@ export default function Index() {
       <FlatList
         data={companyData.four_wheeler_companies}
         keyExtractor={(item) => item.name}
-        // numColumns={2}
-        // columnWrapperStyle={styles.row}
-        renderItem={({ item }) => {
-          console.log(item.logo, imageMap[item.logo]);
-
-          return (
-            <View style={styles.card}>
-              <Pressable
-                onPress={() => {
-                  console.log(`Company selected:- ${item.name}`);
-                  console.log(`Selected Company:- ${selectedCompany}`);
-                  setCompanyName(item.name);
-                  setSelectedCompany(item.name);
-                  router.navigate("/Pages/Cars");
-                }}
-              >
-                <Image
-                  style={styles.logo}
-                  source={
-                    imageMap[item.logo] ||
-                    (console.log(`missing ${item.logo}`),
-                    require("../assets/images/Company/default.png"))
-                  }
-                />
-              </Pressable>
-            </View>
-          );
-        }}
+        renderItem={({ item }) => (
+          <CompanyCard
+            name={item.name}
+            logo={
+              imageMap[item.logo] ||
+              require("../assets/images/Company/default.png")
+            }
+            onPress={() => {
+              setSelectedCompany(item.name);
+              router.push("/cars");
+            }}
+          />
+        )}
       />
     </View>
   );
@@ -79,36 +51,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 10,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  card: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  logo: {
-    width: 200,
-    height: 100,
-    resizeMode: "contain",
-    marginBottom: 10,
-  },
-  companyName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 5,
-  },
-  description: {
-    fontSize: 14,
-    textAlign: "center",
-    color: "#555",
   },
 });
