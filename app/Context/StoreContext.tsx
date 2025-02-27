@@ -5,22 +5,24 @@ interface CompanyContextType {
   setSelectedCompany: (company: string) => void;
 }
 
-const CompnayContext = createContext<CompanyContextType | undefined>(undefined);
+const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 
 export const CompanyProvider = ({ children }: { children: ReactNode }) => {
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
 
   return (
-    <CompnayContext.Provider value={{ selectedCompany, setSelectedCompany }}>
+    <CompanyContext.Provider value={{ selectedCompany, setSelectedCompany }}>
       {children}
-    </CompnayContext.Provider>
+    </CompanyContext.Provider>
   );
 };
 
 export const useCompany = () => {
-  const context = useContext(CompnayContext);
+  const context = useContext(CompanyContext);
   if (!context) {
     throw new Error("useCompany must be used within a CompanyProvider");
   }
   return context;
 };
+
+export default CompanyContext;

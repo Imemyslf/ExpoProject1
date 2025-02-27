@@ -7,7 +7,9 @@ import {
   Pressable,
 } from "react-native";
 import companyData from "./Data/Company.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCompany } from "./Context/StoreContext";
+import { useRouter } from "expo-router";
 
 // Image mapping (Static import is required in React Native)
 const imageMap: { [key: string]: any } = {
@@ -19,7 +21,13 @@ const imageMap: { [key: string]: any } = {
 };
 
 export default function Index() {
+  const { selectedCompany, setSelectedCompany } = useCompany();
   const [companyName, setCompanyName] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log(`Selected Company:- ${selectedCompany}`);
+  }, [selectedCompany]);
 
   return (
     <View style={styles.container}>
@@ -37,7 +45,10 @@ export default function Index() {
               <Pressable
                 onPress={() => {
                   console.log(`Company selected:- ${item.name}`);
+                  console.log(`Selected Company:- ${selectedCompany}`);
                   setCompanyName(item.name);
+                  setSelectedCompany(item.name);
+                  router.navigate("/Pages/Cars");
                 }}
               >
                 <Image
