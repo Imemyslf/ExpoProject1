@@ -2,7 +2,7 @@ import { Text, Image, Pressable, StyleSheet, View } from "react-native";
 
 interface CompanyCardProps {
   name: string;
-  logo: any;
+  logo: { uri: string };
   onPress: () => void;
 }
 

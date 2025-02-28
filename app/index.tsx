@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, FlatList } from "react-native";
 import companyData from "./Data/Company.json";
 import { useCompany } from "./Context/StoreContext";
 import { useRouter } from "expo-router";
-import CompanyCard from "./Components/Pressable"; // Import the new component
+import CompanyCard from "./Components/Pressable";
 
 const imageMap: { [key: string]: any } = {
   "Maruti_Suzuki_logo.png": require("../assets/images/Company/Maruti_Suzuki.png"),
@@ -13,7 +13,7 @@ const imageMap: { [key: string]: any } = {
 };
 
 export default function Index() {
-  const { selectedCompany, setSelectedCompany } = useCompany();
+  const { setSelectedCompany } = useCompany();
   const router = useRouter();
 
   return (
@@ -31,7 +31,7 @@ export default function Index() {
             }
             onPress={() => {
               setSelectedCompany(item.name);
-              router.push("/cars");
+              router.push("/Pages/cars");
             }}
           />
         )}
