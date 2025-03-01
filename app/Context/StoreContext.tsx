@@ -9,9 +9,14 @@ interface ModelsContextType {
   selectedModelType: string | null;
   setSelectedModelType: (modelType: string) => void;
 }
+interface WorkContextType {
+  selectedWorkType: string[] | null;
+  setSelectedWorkType: (workType: string[]) => void;
+}
 
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 const ModelContext = createContext<ModelsContextType | undefined>(undefined);
+const WorkContext = createContext<WorkContextType | undefined>(undefined);
 
 export const CompanyProvider = ({ children }: { children: ReactNode }) => {
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
@@ -35,6 +40,16 @@ export const ModelProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+export const WorkProvider = ({ children }: { children: ReactNode }) => {
+  const [selectedWorkType, setSelectedWorkType] = useState<string[]>([]);
+
+  return (
+    <WorkContext.Provider value={{ selectedWorkType, setSelectedWorkType }}>
+      {children}
+    </WorkContext.Provider>
+  );
+};
+
 export const useCompany = () => {
   const context = useContext(CompanyContext);
   if (!context) {
@@ -51,4 +66,12 @@ export const useModel = () => {
   return context;
 };
 
-export { CompanyContext, ModelContext };
+export const useWork = () => {
+  const context = useContext(WorkContext);
+  if (!context) {
+    throw new Error("useWork must be used within a WorkProvider");
+  }
+  return context;
+};
+
+export { CompanyContext, ModelContext, WorkContext };
