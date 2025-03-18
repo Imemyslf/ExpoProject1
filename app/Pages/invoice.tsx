@@ -1,7 +1,14 @@
-import { View, Text, TextInput, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { useWork } from "../Context/StoreContext";
 import { useState } from "react";
 import tw from "../../tailwind";
+import { IconButton } from "react-native-paper";
 
 const InvoicePage = () => {
   const { selectedWorkType } = useWork();
@@ -59,7 +66,7 @@ const InvoicePage = () => {
         {/* Table Header */}
         <View
           className="headerInfo"
-          style={tw`flex flex-row jsutify-between bg-gray-500 border-b border-gray-300 py-2 rounded-lg`}
+          style={tw`flex flex-row jsutify-between bg-gray-800 border-b border-gray-300 py-2 rounded-lg`}
         >
           <Text style={tw`w-1/2 text-lg text-white font-bold text-center`}>
             Work Done
@@ -73,10 +80,10 @@ const InvoicePage = () => {
           data={selectedWorkType}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item, index }) => (
-            <View style={tw`flex flex-row justify-between rounded-lg p-4`}>
-              <Text style={tw`w-1/2 text-left pl-4 `}>{item}</Text>
+            <View style={tw`flex flex-row justify-between rounded-lg p-4 m-1 border-l border-r border-b `}>
+              <Text style={tw`w-1/2 text-center pl-4 font-medium text-base`}>{item}</Text>
               <View
-                style={tw`w-1/2 flex flex-row pl-4 justify-center border border-black rounded-lg`}
+                style={tw`w-[35%] flex flex-row pl-1 justify-center border border-black rounded-lg`}
               >
                 <Text style={tw`w-[20%] font-semibold text-2xl`}>
                   {" "}
@@ -87,7 +94,7 @@ const InvoicePage = () => {
                   placeholder="Eg. 273"
                   keyboardType="numeric"
                   value={
-                    prices[index] !== undefined ? prices[index].toString() : ""
+                    prices[index] !== undefined ? prices[index].toString() : "0"
                   }
                   onChangeText={(text) => handlePriceChange(text, index)}
                 />
@@ -99,13 +106,24 @@ const InvoicePage = () => {
           style={tw`flex-row justify-between items-center mt-4 py-2 px-5 rounded-xl bg-white shadow-md`}
         >
           <Text style={tw`font-bold text-xl`}>Total:</Text>
-          <View style={tw`bg-gray-500 p-2 rounded-lg`}>
-            <Text style={tw`font-bond text-lg text-white `}>
+          <View style={tw` p-2 rounded-lg`}>
+            <Text style={tw`font-bond text-lg text-green-700 `}>
               ₹ {total.toFixed(2)}
             </Text>
           </View>
         </View>
       </View>
+      
+      {total > 0 && Object.values(prices).every(value => value > 0) && (
+        <View>
+        <TouchableOpacity
+          style={tw` w-[40%] self-center flex-row items-center justify-center bg-gray-800 rounded-lg mt-4 `}
+        >
+          <Text style={tw`font-bold text-lg text-white `}>Share</Text>
+          <IconButton icon="share-variant" size={24} iconColor="white"/>
+        </TouchableOpacity>
+      </View>
+      )}      
     </View>
   );
 };
