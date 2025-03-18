@@ -86,9 +86,7 @@ const WorkListComponent = () => {
 
   return (
     <View className="main-container" style={tw`h-full p-4`}>
-      {/* 🔴 First Section - 55% */}
       <View className="first" style={tw`h-[50%] p-2`}>
-        {/* Scrollable Category List */}
         <View style={tw`items-center`}>
           <Text style={tw`font-bold text-2xl`}>Services</Text>
         </View>
@@ -113,7 +111,6 @@ const WorkListComponent = () => {
           </ScrollView>
         </View>
 
-        {/* Work Items Based on Centered Category */}
         <View style={tw`flex-1 mt-1 p-4 rounded-lg items-center`}>
           <Text style={tw`text-lg font-semibold text-gray-400 p-2`}>
             Select Work From Here 👇
@@ -138,7 +135,6 @@ const WorkListComponent = () => {
         </View>
       </View>
 
-      {/* 🔵 Second Section - 45% */}
       <View className="second" style={tw`h-[50%] p-2`}>
         <View style={tw`items-center`}>
           <Text style={tw`text-2xl font-semibold text-black p-2`}>
@@ -171,7 +167,6 @@ const WorkListComponent = () => {
           style={{ maxHeight: 250 }}
         />
 
-        {/* Buttons for Clearing & Submitting */}
         <View style={tw`flex-row justify-between mt-2`}>
           <TouchableOpacity
             style={tw`bg-red-300 p-3 rounded-lg flex-1 mr-2`}

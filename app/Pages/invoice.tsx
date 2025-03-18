@@ -1,7 +1,7 @@
 import { View, Text, TextInput, FlatList } from "react-native";
 import { useWork } from "../Context/StoreContext";
-import styles from "../../styles/Invoice";
 import { useState } from "react";
+import tw from "../../tailwind";
 
 const InvoicePage = () => {
   const { selectedWorkType } = useWork();
@@ -26,57 +26,84 @@ const InvoicePage = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Customer Details */}
-      <View>
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>Customer Name:</Text>
-          <TextInput style={styles.input} placeholder="Eg. John Wick" />
+    <View style={tw`h-full`}>
+      <View style={tw`min-h p-2`}>
+        <View style={tw`items-center`}>
+          <Text style={tw`text-2xl font-bold mb-2`}>CONTACTS</Text>
         </View>
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>Customer Ph no:</Text>
+        <View style={tw`flex-column p-2`}>
+          <Text style={tw`mb-2 flex font-semibold text-base pl-4`}>
+            Customer Name:
+          </Text>
           <TextInput
-            style={styles.input}
+            style={tw`bg-white w-[95%] border pl-4 rounded-lg self-center`}
+            placeholder="Eg. John Wick"
+          />
+        </View>
+        <View style={tw`flex-column p-2`}>
+          <Text style={tw`mb-2 flex font-semibold text-base pl-4`}>
+            Customer Ph no:
+          </Text>
+          <TextInput
+            style={tw`bg-white w-[95%] border pl-4 rounded-lg self-center`}
             placeholder="Eg. 1234567890"
             keyboardType="numeric"
           />
         </View>
       </View>
 
-      {/* Work List Table */}
-      <View style={styles.primaryContainer}>
+      <View style={tw`items-center`}>
+        <Text style={tw`text-2xl font-bold mb-2`}>INVOICE</Text>
+      </View>
+      <View style={tw`rounded-lg bg-white m-2`}>
         {/* Table Header */}
-        <View style={styles.tableHeader}>
-          <Text style={styles.headerText}>Work Done</Text>
-          <Text style={styles.headerText}>Price</Text>
+        <View
+          className="headerInfo"
+          style={tw`flex flex-row jsutify-between bg-gray-500 border-b border-gray-300 py-2 rounded-lg`}
+        >
+          <Text style={tw`w-1/2 text-lg text-white font-bold text-center`}>
+            Work Done
+          </Text>
+          <Text style={tw`w-1/2 text-lg text-white font-bold text-center`}>
+            Price
+          </Text>
         </View>
 
-        {/* Table Body */}
         <FlatList
           data={selectedWorkType}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item, index }) => (
-            <View style={styles.tableRow}>
-              <Text style={styles.cellText}>{item}</Text>
-              <TextInput
-                style={styles.priceInput}
-                placeholder="Eg. 273"
-                keyboardType="numeric"
-                value={
-                  prices[index] !== undefined ? prices[index].toString() : ""
-                }
-                onChangeText={(text) => handlePriceChange(text, index)}
-              />
+            <View style={tw`flex flex-row justify-between rounded-lg p-4`}>
+              <Text style={tw`w-1/2 text-left pl-4 `}>{item}</Text>
+              <View
+                style={tw`w-1/2 flex flex-row pl-4 justify-center border border-black rounded-lg`}
+              >
+                <Text style={tw`w-[20%] font-semibold text-2xl`}>
+                  {" "}
+                  {"\u20B9"}
+                </Text>
+                <TextInput
+                  style={tw` w-[50%] bg-white rounded-lg text-center `}
+                  placeholder="Eg. 273"
+                  keyboardType="numeric"
+                  value={
+                    prices[index] !== undefined ? prices[index].toString() : ""
+                  }
+                  onChangeText={(text) => handlePriceChange(text, index)}
+                />
+              </View>
             </View>
           )}
         />
-      </View>
-
-      {/* Total Section */}
-      <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Total:</Text>
-        <View style={styles.totalBox}>
-          <Text style={styles.totalAmount}>₹ {total.toFixed(2)}</Text>
+        <View
+          style={tw`flex-row justify-between items-center mt-4 py-2 px-5 rounded-xl bg-white shadow-md`}
+        >
+          <Text style={tw`font-bold text-xl`}>Total:</Text>
+          <View style={tw`bg-gray-500 p-2 rounded-lg`}>
+            <Text style={tw`font-bond text-lg text-white `}>
+              ₹ {total.toFixed(2)}
+            </Text>
+          </View>
         </View>
       </View>
     </View>
