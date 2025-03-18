@@ -13,6 +13,8 @@ import tw from "../../tailwind";
 import workDataJSON from "../Data/Work.json";
 import { IconButton } from "react-native-paper";
 import { useRouter } from "expo-router";
+import { useWork } from "../Context/StoreContext";
+
 // Define types
 interface WorkItem {
   name: string;
@@ -29,6 +31,7 @@ const WorkListComponent = () => {
   const [categorySelected, setCategorySelected] = useState<string>(
     "Regular Maintenance & Servicing"
   );
+  const { setSelectedWorkType } = useWork();
   const [workSelected, setWorkSelected] = useState<string[]>([]);
   const scrollRef = useRef<ScrollView>(null);
   const itemPositions = useRef<{ [key: string]: number }>({});
@@ -77,6 +80,7 @@ const WorkListComponent = () => {
   // Handle submit action
   const handleSubmit = () => {
     console.log("Submitting Work Selected:", workSelected);
+    setSelectedWorkType(workSelected);
     router.push("/Pages/invoice");
   };
 
@@ -92,7 +96,7 @@ const WorkListComponent = () => {
           <ScrollView
             ref={scrollRef}
             horizontal
-            showsHorizontalScrollIndicator={true}
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={tw`flex-row items-center`}
             onScroll={handleScroll}
             scrollEventThrottle={16}
@@ -114,7 +118,10 @@ const WorkListComponent = () => {
           <Text style={tw`text-lg font-semibold text-gray-400 p-2`}>
             Select Work From Here 👇
           </Text>
-          <ScrollView style={tw`flex-1 w-full pl-4`}>
+          <ScrollView
+            style={tw`flex-1 w-full pl-4`}
+            showsVerticalScrollIndicator={false}
+          >
             {Array.isArray(workData.services?.[categorySelected]) &&
               workData.services[categorySelected]!.map((item) => (
                 <TouchableOpacity
