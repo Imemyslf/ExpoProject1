@@ -13,10 +13,15 @@ interface TitleProps {
 const Contact = ({ name, placeholder }: ContactProps) => {
   return (
     <View style={tw`flex-column p-2`}>
-      <Text style={tw`mb-2 flex font-semibold text-base pl-4`}>{name}</Text>
+      {/* Wrapper around Text to limit background */}
+      <View style={tw`bg-white self-start px-2 rounded-md`}>
+        <Text style={tw`mb-2 font-semibold text-base`}>{name}</Text>
+      </View>
+
+      {/* Input Field */}
       <TextInput
         style={tw`bg-white w-[95%] border pl-4 rounded-lg self-center`}
-        placeholder={placeholder} // Fixed typo here
+        placeholder={placeholder}
       />
     </View>
   );
