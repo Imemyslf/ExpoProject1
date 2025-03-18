@@ -84,7 +84,7 @@ export default function CarsScreen() {
               onPress={() => {
                 console.log(item.name);
                 setSelectedModelType(item.name);
-                router.push("/Pages/workSelection");
+                router.push("/Pages/Work_Selection");
               }}
             />
           )}

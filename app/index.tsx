@@ -1,8 +1,9 @@
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import { Text, View, FlatList } from "react-native";
 import companyData from "./Data/Company.json";
 import { useCompany } from "./Context/StoreContext";
 import { useRouter } from "expo-router";
 import CompanyCard from "./Components/Pressable";
+import tw from "twrnc"; // Import Tailwind CSS
 
 const imageMap: { [key: string]: any } = {
   "Maruti_Suzuki_logo.png": require("../assets/images/Company/Maruti_Suzuki.png"),
@@ -17,21 +18,20 @@ export default function Index() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Four Wheeler Company</Text>
+    <View style={tw`flex-1 bg-gray-100 p-4`}>
+      <Text style={tw`text-2xl font-bold text-center text-gray-800 my-4`}>
+        FOURAGE
+      </Text>
       <FlatList
         data={companyData.four_wheeler_companies}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
           <CompanyCard
             name={item.name}
-            logo={
-              imageMap[item.logo] ||
-              require("../assets/images/Company/default.png")
-            }
+            logo={imageMap[item.logo] || require("../assets/images/Company/default.png")}
             onPress={() => {
               setSelectedCompany(item.name);
-              router.push("/Pages/cars");
+              router.push("/Pages/Car_Selection");
             }}
           />
         )}
@@ -39,17 +39,3 @@ export default function Index() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-    padding: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 10,
-  },
-});

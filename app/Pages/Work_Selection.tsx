@@ -81,7 +81,7 @@ const WorkListComponent = () => {
   const handleSubmit = () => {
     console.log("Submitting Work Selected:", workSelected);
     setSelectedWorkType(workSelected);
-    router.push("/Pages/invoice");
+    router.push("/Pages/Invoice_Generator");
   };
 
   return (
