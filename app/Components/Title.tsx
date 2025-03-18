@@ -7,8 +7,8 @@ interface ContactProps {
 }
 
 interface TitleProps {
-    name: string;
-  }
+  name: string;
+}
 
 const Contact = ({ name, placeholder }: ContactProps) => {
   return (
@@ -22,10 +22,11 @@ const Contact = ({ name, placeholder }: ContactProps) => {
   );
 };
 
-const Title = ({name}: TitleProps) => {
-    return (
+const Title = ({ name }: TitleProps) => {
+  return (
     <View style={tw`items-center`}>
-        <Text style={tw`text-2xl font-bold mb-2`}>{name}</Text>
-    </View>);
-}
-export {Contact, Title};
+      <Text style={tw`text-2xl font-bold mb-2`}>{name}</Text>
+    </View>
+  );
+};
+export { Contact, Title };
