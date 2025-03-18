@@ -1,31 +1,74 @@
 {
-    "services": {
-        "Regular Maintenance & Servicing": [
-          { "name": "Oil & Filter Changes", "price": 1500 },
-          { "name": "Brake & Suspension Checks", "price": 1200 },
-          { "name": "Wheel Alignment & Balancing", "price": 1000 },
-          { "name": "Battery & Electrical System Check", "price": 800 }
-        ],
-        "Repair & Diagnostics": [
-          { "name": "Engine Repair & Tuning", "price": 5000 },
-          { "name": "Transmission & Clutch Repair", "price": 7000 },
-          { "name": "OBD Scanning & Fault Detection", "price": 1500 },
-          { "name": "Cooling System & AC Servicing", "price": 3000 }
-        ],
-        "Accidental Repairs & Body Work": [
-          { "name": "Dent Removal & Painting", "price": 4500 },
-          { "name": "Bumper & Windshield Replacement", "price": 6000 },
-          { "name": "Chassis Alignment", "price": 8000 }
-        ],
-        "Roadside Assistance & Emergency Services": [
-          { "name": "Towing & Jump-Start", "price": 2000 },
-          { "name": "Flat Tire & Minor Repairs On-Spot", "price": 1000 }
-        ],
-        "Fleet & Business Vehicle Maintenance": [
-          { "name": "Preventive Maintenance Scheduling", "price": 5000 },
-          { "name": "Breakdown Analysis & Tracking", "price": 3500 }
-        ]
+  "services": {
+    "Regular Maintenance & Servicing": [
+      {
+        "name": "Oil & Filter Changes",
+        "price": 1500
+      },
+      {
+        "name": "Brake & Suspension Checks",
+        "price": 1200
+      },
+      {
+        "name": "Wheel Alignment & Balancing",
+        "price": 1000
+      },
+      {
+        "name": "Battery & Electrical System Check",
+        "price": 800
       }
-      
+    ],
+    "Repair and Diagnostics Data": [
+      {
+        "name": "Engine Repair & Tuning",
+        "price": 5000
+      },
+      {
+        "name": "Transmission & Clutch Repair",
+        "price": 7000
+      },
+      {
+        "name": "OBD Scanning & Fault Detection",
+        "price": 1500
+      },
+      {
+        "name": "Cooling System & AC Servicing",
+        "price": 3000
+      }
+    ],
+    "Accidental Repairs & Body Work": [
+      {
+        "name": "Dent Removal & Painting",
+        "price": 4500
+      },
+      {
+        "name": "Bumper & Windshield Replacement",
+        "price": 6000
+      },
+      {
+        "name": "Chassis Alignment",
+        "price": 8000
+      }
+    ],
+    "Roadside Assistance ": [
+      {
+        "name": "Towing & Jump-Start",
+        "price": 2000
+      },
+      {
+        "name": "Flat Tire & Minor Repairs On-Spot",
+        "price": 1000
+      }
+    ],
+    "Fleet & Business Vehicle Maintenance": [
+      {
+        "name": "Preventive Maintenance Scheduling",
+        "price": 5000
+      },
+      {
+        "name": "Breakdown Analysis & Tracking",
+        "price": 3500
+      }
+    ]
   }
-  
+}
