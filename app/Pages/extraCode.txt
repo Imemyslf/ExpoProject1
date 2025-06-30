@@ -2,16 +2,14 @@ import { useState, useEffect } from "react";
 import {
   Text,
   View,
+  FlatList,
   StyleSheet,
   ImageSourcePropType,
-  Dimensions,
 } from "react-native";
 import companyData from "../Data/Company.json";
 import { useCompany, useModel } from "../Context/StoreContext";
 import CompanyCard from "../Components/Pressable";
 import { useRouter } from "expo-router";
-import Carousel from "react-native-reanimated-carousel";
-
 // Define types for company and model
 interface Model {
   name: string;
@@ -58,7 +56,6 @@ export default function CarsScreen() {
   const { selectedCompany } = useCompany();
   const { setSelectedModelType } = useModel();
   const [company, setCompany] = useState<Company | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -70,59 +67,32 @@ export default function CarsScreen() {
     }
   }, [selectedCompany]);
 
-  // Get screen width for carousel
-  const { width } = Dimensions.get("window");
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Models for {selectedCompany}</Text>
-      <View style={styles.carouselWrapper}>
-        {company?.models ? (
-          <>
-            <Carousel
-              loop
-              width={width * 0.9}
-              height={400}
-              autoPlay={false}
-              mode="parallax"
-              modeConfig={{
-                parallaxScrollingScale: 0.85,
-                parallaxScrollingOffset: 100,
+      {company?.models ? (
+        <FlatList
+          data={company.models}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <CompanyCard
+              name={item.name}
+              logo={
+                imageMaps[selectedCompany ?? ""]?.[item.name] ||
+                require("../../assets/images/Company/default.png")
+              }
+              onPress={() => {
+                console.log(item.name);
+                setSelectedModelType(item.name);
+                router.push("/Pages/Work_Selection");
               }}
-              pagingEnabled={true}
-              data={company.models}
-              onSnapToItem={setActiveIndex}
-              renderItem={({ item }) => (
-                <CompanyCard
-                  name={item.name}
-                  logo={
-                    imageMaps[selectedCompany ?? ""]?.[item.name] ||
-                    require("../../assets/images/Company/default.png")
-                  }
-                  onPress={() => {
-                    setSelectedModelType(item.name);
-                    router.push("/Pages/Work_Selection");
-                  }}
-                  showLogo={true}
-                />
-              )}
+              showLogo={true}
             />
-            <View style={styles.pagination}>
-              {company.models.map((_, idx) => (
-                <View
-                  key={idx}
-                  style={[
-                    styles.dot,
-                    activeIndex === idx && styles.activeDot
-                  ]}
-                />
-              ))}
-            </View>
-          </>
-        ) : (
-          <Text>No models found</Text>
-        )}
-      </View>
+          )}
+        />
+      ) : (
+        <Text>No models found</Text>
+      )}
     </View>
   );
 }
@@ -137,30 +107,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
-    textAlign: "center",
-  },
-  carouselWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  pagination: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 16,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "#ccc",
-    marginHorizontal: 5,
-  },
-  activeDot: {
-    backgroundColor: "#333",
-    width: 14,
-    height: 14,
-    borderRadius: 7,
   },
 });

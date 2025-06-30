@@ -14,7 +14,7 @@
         "price": 1000
       },
       {
-        "name": "Battery & Electrical System Check",
+        "name": "Battery Check Up",
         "price": 800
       }
     ],
@@ -26,10 +26,6 @@
       {
         "name": "Transmission & Clutch Repair",
         "price": 7000
-      },
-      {
-        "name": "OBD Scanning & Fault Detection",
-        "price": 1500
       },
       {
         "name": "Cooling System & AC Servicing",
@@ -54,10 +50,6 @@
       {
         "name": "Towing & Jump-Start",
         "price": 2000
-      },
-      {
-        "name": "Flat Tire & Minor Repairs On-Spot",
-        "price": 1000
       }
     ],
     "Fleet & Business Vehicle Maintenance": [
