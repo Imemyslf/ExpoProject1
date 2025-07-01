@@ -9,13 +9,16 @@ import {
   FlatList,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
+import type { ComponentRef } from "react";
+
+
 
 import companyData from "./Data/Company.json";
 import { useCompany } from "./Context/StoreContext";
 import { useRouter } from "expo-router";
 import CompanyCard from "./Components/Pressable";
 import tw from "twrnc";
-import { Ionicons } from "@expo/vector-icons"; // For search icon
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -41,7 +44,9 @@ export default function Index() {
     companyData.four_wheeler_companies
   );
 
-  const carouselRef = useRef(null);
+  // const carouselRef = useRef(null);
+  const carouselRef = useRef<ComponentRef<typeof Carousel>>(null);
+
 
   // Filter companies for dropdown as user types
   const dropdownData =
@@ -62,7 +67,7 @@ export default function Index() {
       setActiveIndex(idx);
       // Scroll carousel to the selected index
       if (carouselRef.current) {
-        carouselRef.current.scrollTo({ index: idx, animated: true });
+        carouselRef.current?.scrollTo({ index: idx, animated: true });
       }
     }
   };
@@ -77,7 +82,7 @@ export default function Index() {
       setActiveIndex(idx);
       setShowDropdown(false);
       if (carouselRef.current) {
-        carouselRef.current.scrollTo({ index: idx, animated: true });
+        carouselRef.current?.scrollTo({ index: idx, animated: true });
       }
     }
   };

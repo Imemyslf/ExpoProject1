@@ -1,6 +1,6 @@
 import { View, Text, Alert, ScrollView } from "react-native";
 import { useWork } from "../Context/StoreContext";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import tw from "../../tailwind";
 import { Contact, Title } from "../Components/Title";
 import Table from "../Components/Table";
@@ -71,9 +71,8 @@ const InvoicePage = () => {
 
   return (
     <View style={tw`flex-1`}>
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
-        style={tw`h-full`}
+      <ScrollView        
+        style={tw`flex-1`}
       >
         <ViewShot ref={tableRef} options={{ format: "png", quality: 0.9 }}>
           <View style={tw`p-2`}>

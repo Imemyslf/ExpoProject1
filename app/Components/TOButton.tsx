@@ -4,10 +4,10 @@ import { IconButton } from "react-native-paper";
 
 interface ButtonUIContent {
   onPress: () => void;
-  title: string; // Renamed from 'type' to 'title'
   iconName: string;
   iconColor: string;
   size?: number;
+  title?: string; // Optional
 }
 
 const TOButton: React.FC<ButtonUIContent> = ({
@@ -20,9 +20,15 @@ const TOButton: React.FC<ButtonUIContent> = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={tw`h-12 w-[45%] m-2 flex-row items-center justify-center rounded-lg mt-4 border border-gray-400`}
+      style={
+        title
+          ? tw`h-11 w-[45%] m-2 flex-row items-center justify-center rounded-lg mt-4 border border-gray-400`
+          : tw`h-11 w-[15%] m-2 flex-row items-center justify-center rounded-lg border border-gray-400`
+      }
     >
-      <Text style={[tw`font-bold text-lg`, { color: iconColor }]}>{title}</Text>
+      {title && (
+        <Text style={[tw`font-bold text-lg`, { color: iconColor }]}>{title}</Text>
+      )}
       <IconButton icon={iconName} size={size} iconColor={iconColor} />
     </TouchableOpacity>
   );
