@@ -176,6 +176,8 @@ const WorkListComponent = () => {
               Clear Work Selected
             </Text>
           </TouchableOpacity>
+
+          { workSelected.length !== 0 &&
           <TouchableOpacity
             style={tw`bg-green-300 p-3 rounded-lg flex-1`}
             onPress={handleSubmit}
@@ -184,6 +186,9 @@ const WorkListComponent = () => {
               Submit Work Selected
             </Text>
           </TouchableOpacity>
+          
+          }
+          
         </View>
       </View>
     </View>

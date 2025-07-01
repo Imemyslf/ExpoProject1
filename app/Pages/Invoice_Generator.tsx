@@ -1,4 +1,11 @@
-import { View, Text, Alert, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Alert,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { useWork } from "../Context/StoreContext";
 import { useState, useRef } from "react";
 import tw from "../../tailwind";
@@ -70,48 +77,49 @@ const InvoicePage = () => {
   };
 
   return (
-    <View style={tw`flex-1`}>
-      <ScrollView        
-        style={tw`flex-1`}
-      >
-        <ViewShot ref={tableRef} options={{ format: "png", quality: 0.9 }}>
-          <View style={tw`p-2`}>
-            <Title name="CONTACTS" />
-            <Contact name="Customer Name:" placeholder="Eg. John Wick" />
-            <Contact name="Customer Ph no:" placeholder="Eg. 1234567890" />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={tw`flex-1`}>
+        <ScrollView style={tw`flex-1`}>
+          <ViewShot ref={tableRef} options={{ format: "png", quality: 0.9 }}>
+            <View style={tw`p-2`}>
+              <Title name="CONTACTS" />
+              <Contact name="Customer Name:" placeholder="Eg. John Wick" />
+              <Contact name="Customer Ph no:" placeholder="Eg. 1234567890" />
 
-            <Title name="INVOICE" />
-            <Table
-              data={selectedWorkType || []}
-              price={prices}
-              total={total}
-              onChange={handlePriceChange}
-            />
-          </View>
-        </ViewShot>
-      </ScrollView>
+              <Title name="INVOICE" />
+              <Table
+                data={selectedWorkType || []}
+                price={prices}
+                total={total}
+                onChange={handlePriceChange}
+                showFlip={makeImage}
+              />
+            </View>
+          </ViewShot>
+        </ScrollView>
 
-      <View style={tw`w-full p-4 flex-row justify-around bg-white`}>
-        <TOButton
-          onPress={() => {
-            setMakeImage(true);
-            captureInvoiceImage();
-          }}
-          title="Confirm"
-          iconName="check-all"
-          iconColor="blue"
-        />
-
-        {makeImage && (
+        <View style={tw`w-full p-4 flex-row justify-around bg-white`}>
           <TOButton
-            onPress={shareInvoiceImage}
-            title="Share"
-            iconName="share-variant"
-            iconColor="red"
+            onPress={() => {
+              setMakeImage(true);
+              captureInvoiceImage();
+            }}
+            title="Confirm"
+            iconName="check-all"
+            iconColor="blue"
           />
-        )}
+
+          {makeImage && (
+            <TOButton
+              onPress={shareInvoiceImage}
+              title="Share"
+              iconName="share-variant"
+              iconColor="red"
+            />
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

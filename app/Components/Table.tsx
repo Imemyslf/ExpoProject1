@@ -12,27 +12,25 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   interpolate,
-  useDerivedValue,
 } from "react-native-reanimated";
-import SvgQRCode from "react-native-qrcode-svg";
+import UPIQRPayment from "./UPIQRPayment";
 
 interface TableProps {
   data: string[];
   price: Record<number, number>;
   total: number;
   onChange: (text: string, index: number) => void;
+  showFlip?: boolean; // Add this line
 }
 
-const Table = ({ data, price, total, onChange }: TableProps) => {
+const Table = ({ data, price, total, onChange, showFlip }: TableProps) => {
   const isFlipped = useSharedValue(0);
 
-  // 🧠 Track pointer event states
+  // Track pointer event states
   const [frontEvents, setFrontEvents] = useState<"auto" | "none">("auto");
   const [backEvents, setBackEvents] = useState<"auto" | "none">("none");
 
-  const derived = useDerivedValue(() => isFlipped.value);
-
-  // 🧠 Update pointer events when flip changes
+  // Update pointer events when flip changes
   useEffect(() => {
     const interval = setInterval(() => {
       if (isFlipped.value >= 90) {
@@ -78,7 +76,7 @@ const Table = ({ data, price, total, onChange }: TableProps) => {
     <View style={[tw`h-full flex-1 items-center justify-center`, { perspective: 1000 }]}>
       {/* FRONT SIDE */}
       <Animated.View
-        style={[tw`w-[90%]`, frontAnimatedStyle]}
+        style={[tw`w-[95%]`, frontAnimatedStyle]}
         pointerEvents={frontEvents}
       >
         <View style={tw`h-full`}>
@@ -115,7 +113,6 @@ const Table = ({ data, price, total, onChange }: TableProps) => {
                     </Text>
                     <TextInput
                       style={tw`w-[50%] bg-white rounded-lg text-center`}
-                      placeholder="Eg. 273"
                       keyboardType="numeric"
                       value={
                         price[index] !== undefined
@@ -134,11 +131,13 @@ const Table = ({ data, price, total, onChange }: TableProps) => {
               style={tw`flex-row justify-between items-center mt-4 py-2 px-5 rounded-xl bg-white shadow-md`}
             >
               <Text style={tw`font-bold text-xl`}>Total:</Text>
-              <TOButton
-                onPress={toggleFlip}
-                iconName="rotate-3d-variant"
-                iconColor="grey"
-              />
+              {showFlip && (
+                <TOButton
+                  onPress={toggleFlip}
+                  iconName="rotate-3d-variant"
+                  iconColor="grey"
+                />
+              )}
               <View style={tw`p-2 rounded-lg`}>
                 <Text style={tw`font-bold text-lg text-green-700`}>
                   ₹ {total.toFixed(2)}
@@ -151,18 +150,11 @@ const Table = ({ data, price, total, onChange }: TableProps) => {
 
       {/* BACK SIDE */}
       <Animated.View
-        style={[tw`w-[90%]`, backAnimatedStyle]}
+        style={[tw`w-[90%] `, backAnimatedStyle]}
         pointerEvents={backEvents}
       >
         <View style={tw`flex-1 justify-center p-4 items-center bg-white`}>
-          <Text style={tw`text-lg mb-4`}>Scan to Pay</Text>
-          <View style={tw`flex items-center justify-center m-10`}>
-            <SvgQRCode
-              value={`upi://pay?pa=merchant@upi&pn=MerchantName&am=${total}&cu=INR`}
-              size={200}
-          />
-          </View>
-          
+          <UPIQRPayment total={total} />
           <TOButton
             onPress={toggleFlip}
             iconName="rotate-3d-variant"
