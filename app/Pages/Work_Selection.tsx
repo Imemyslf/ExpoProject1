@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   FlatList,
 } from "react-native";
 import tw from "../../tailwind";
-import workDataJSON from "../Data/Work.json";
+import { fetchServices } from "../firebase/fetchData"; // <-- Import fetchServices
 import { IconButton } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useWork } from "../Context/StoreContext";
@@ -24,9 +24,6 @@ interface WorkData {
   services: Record<string, WorkItem[]>;
 }
 
-// Load work data with correct types
-const workData: WorkData = workDataJSON;
-
 const WorkListComponent = () => {
   const [categorySelected, setCategorySelected] = useState<string>(
     "Regular Maintenance & Servicing"
@@ -35,8 +32,13 @@ const WorkListComponent = () => {
   const [workSelected, setWorkSelected] = useState<string[]>([]);
   const scrollRef = useRef<ScrollView>(null);
   const itemPositions = useRef<{ [key: string]: number }>({});
-  const categoryKeys = Object.keys(workData.services);
+  const [workDatas, setWorkDatas] = useState<WorkData | null>(null);
   const router = useRouter();
+
+  const categoryKeys = useMemo(
+    () => (workDatas ? Object.keys(workDatas.services) : []),
+    [workDatas]
+  );
 
   // Handle horizontal scroll event
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -84,6 +86,26 @@ const WorkListComponent = () => {
     router.push("/Pages/Invoice_Generator");
   };
 
+  useEffect(() => {
+    async function loadServices() {
+      const servicesData = await fetchServices();
+      // Assuming only one document in the collection
+      if (servicesData.length > 0) {
+        const { id, ...services } = servicesData[0];
+        setWorkDatas({ services });
+      }
+    }
+    loadServices();
+  }, []);
+
+  if (!workDatas) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <Text>Loading services...</Text>
+      </View>
+    );
+  }
+
   return (
     <View className="main-container" style={tw`h-full p-4`}>
       <View className="first" style={tw`h-[50%] p-2`}>
@@ -119,16 +141,14 @@ const WorkListComponent = () => {
             style={tw`flex-1 w-full pl-4`}
             showsVerticalScrollIndicator={false}
           >
-            {Array.isArray(workData.services?.[categorySelected]) &&
-              workData.services[categorySelected]!.map((item) => (
+            {Array.isArray(workDatas?.services?.[categorySelected]) &&
+              workDatas.services[categorySelected]!.map((item) => (
                 <TouchableOpacity
                   key={item.name}
                   onPress={() => addWorkItem(item.name)}
                   style={tw`w-70 bg-black border border-white m-1 p-3 rounded-lg`}
                 >
-                  <Text style={tw`font-bold text-white text-center`}>
-                    {item.name}
-                  </Text>
+                  <Text style={tw`font-bold text-white text-center`}>{item.name}</Text>
                 </TouchableOpacity>
               ))}
           </ScrollView>
@@ -177,18 +197,16 @@ const WorkListComponent = () => {
             </Text>
           </TouchableOpacity>
 
-          { workSelected.length !== 0 &&
-          <TouchableOpacity
-            style={tw`bg-green-300 p-3 rounded-lg flex-1`}
-            onPress={handleSubmit}
-          >
-            <Text style={tw`text-black text-center font-bold`}>
-              Submit Work Selected
-            </Text>
-          </TouchableOpacity>
-          
-          }
-          
+          {workSelected.length !== 0 && (
+            <TouchableOpacity
+              style={tw`bg-green-300 p-3 rounded-lg flex-1`}
+              onPress={handleSubmit}
+            >
+              <Text style={tw`text-black text-center font-bold`}>
+                Submit Work Selected
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>

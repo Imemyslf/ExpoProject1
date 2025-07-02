@@ -6,8 +6,6 @@ import {
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import type { ComponentRef } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "./firebase/firebaseConfig";
 import { useCompany } from "./Context/StoreContext";
 import { useRouter } from "expo-router";
 import CompanyCard from "./Components/Pressable";
@@ -16,6 +14,7 @@ import SearchBar from "./Components/SearchBar";
 import Pagination from "./Components/Pagination";
 import CompanyDropdown from "./Components/CompanyDropdown";
 import imageMap from "./Data/companyLogos";
+import { fetchFourWheelers } from "./firebase/fetchData";
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,18 +32,15 @@ export default function Index() {
   const carouselRef = useRef<ComponentRef<typeof Carousel>>(null);
 
   useEffect(() => {
-    async function fetchCompanies() {
-      try {
-        const companyDocs = await getDocs(
-          collection(db, "four_wheeler_companies")
-        );
-        const allCompanies = companyDocs.docs.map((doc) => doc.data());
-        setFirebaseData(allCompanies);
-      } catch (err) {
-        console.error("Error fetching companies:", err);
-      }
-    }
-    fetchCompanies();
+    async function loadData() {
+          try {
+            const companies = await fetchFourWheelers();
+            setFirebaseData(companies);
+          } catch (err) {
+            console.error("Error fetching companies:", err);
+          }
+        }
+    loadData();
   }, []);
 
   // Memoize dropdownData

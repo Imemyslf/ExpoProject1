@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Text, View, Dimensions } from "react-native";
-import companyData from "../Data/Company.json";
 import { useCompany, useModel } from "../Context/StoreContext";
 import CompanyCard from "../Components/Pressable";
 import { useRouter } from "expo-router";
@@ -8,6 +7,7 @@ import Carousel from "react-native-reanimated-carousel";
 import Pagination from "../Components/Pagination";
 import imageMaps from "../Data/carImages";
 import tw from "twrnc";
+import { fetchFourWheelers } from "../firebase/fetchData";
 
 // Define types for company and model
 interface Model {
@@ -24,16 +24,25 @@ export default function CarsScreen() {
   const { setSelectedModelType } = useModel();
   const [company, setCompany] = useState<Company | null>(null);
   const [progressIndex, setProgressIndex] = useState(0);
+  const [firebaseData, setFirebaseData] = useState<any[]>([]);
   const router = useRouter();
 
   useEffect(() => {
+    async function loadCompanies() {
+      const allCompanies = await fetchFourWheelers();
+      setFirebaseData(allCompanies);
+    }
+    loadCompanies();
+  }, []);
+
+  useEffect(() => {
     if (selectedCompany) {
-      const foundCompany = companyData.four_wheeler_companies.find(
-        (c: Company) => c.name === selectedCompany
+      const foundCompany = firebaseData.find(
+        (c) => c.name === selectedCompany
       );
       setCompany(foundCompany || null);
     }
-  }, [selectedCompany]);
+  }, [selectedCompany, firebaseData]);
 
   const { width } = Dimensions.get("window");
 
