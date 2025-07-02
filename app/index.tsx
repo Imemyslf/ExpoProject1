@@ -1,32 +1,23 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import {
   Text,
   View,
   Dimensions,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import type { ComponentRef } from "react";
-
-import companyData from "./Data/Company.json";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase/firebaseConfig";
 import { useCompany } from "./Context/StoreContext";
 import { useRouter } from "expo-router";
 import CompanyCard from "./Components/Pressable";
 import tw from "twrnc";
-import { Ionicons } from "@expo/vector-icons";
+import SearchBar from "./Components/SearchBar";
+import Pagination from "./Components/Pagination";
+import CompanyDropdown from "./Components/CompanyDropdown";
+import imageMap from "./Data/companyLogos";
 
 const { width, height } = Dimensions.get("window");
-
-const imageMap: { [key: string]: any } = {
-  "Maruti_Suzuki_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/Maruti_Suzuki.png?updatedAt=1751425679693"},
-  "Tata_Motors_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/Tata_Motors.png?updatedAt=1751425679701"},
-  "Hyundai_Motor_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/Hyundai_Motor_Company_logo.svg.png?updatedAt=1751425679886"},
-  "Mahindra_Mahindra_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/Mahindra-Logo.png?updatedAt=1751425679648"},
-  "Honda_Cars_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/honda-logo.png?updatedAt=1751425679918"},
-};
 
 export default function Index() {
   const { setSelectedCompany } = useCompany();
@@ -34,29 +25,47 @@ export default function Index() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [firebaseData, setFirebaseData] = useState<any[]>([]);
   const [filteredCompanies, setFilteredCompanies] = useState(
-    companyData.four_wheeler_companies
-  );
-
-  const [carouselData, setCarouselData] = useState(
-    companyData.four_wheeler_companies
+    firebaseData
   );
   const [progressIndex, setProgressIndex] = useState(0);
   const carouselRef = useRef<ComponentRef<typeof Carousel>>(null);
 
-  // Filter companies for dropdown as user types
-  const dropdownData =
-    search.length > 0
-      ? companyData.four_wheeler_companies.filter((company) =>
-          company.name.toLowerCase().includes(search.toLowerCase())
-        )
-      : [];
+  useEffect(() => {
+    async function fetchCompanies() {
+      try {
+        const companyDocs = await getDocs(
+          collection(db, "four_wheeler_companies")
+        );
+        const allCompanies = companyDocs.docs.map((doc) => doc.data());
+        setFirebaseData(allCompanies);
+      } catch (err) {
+        console.error("Error fetching companies:", err);
+      }
+    }
+    fetchCompanies();
+  }, []);
+
+  // Memoize dropdownData
+  const dropdownData = useMemo(
+    () =>
+      search.length > 0
+        ? firebaseData.filter((company) =>
+            company.name.toLowerCase().includes(search.toLowerCase())
+          )
+        : [],
+    [search, firebaseData]
+  );
+
+  // Memoize carouselData if you have any filtering/sorting logic
+  const carouselData = useMemo(() => firebaseData, [firebaseData]);
 
   // Handle dropdown selection
   const handleSelectCompany = (companyName: string) => {
     setSearch(companyName);
     setShowDropdown(false);
-    const idx = companyData.four_wheeler_companies.findIndex(
+    const idx = firebaseData.findIndex(
       (c) => c.name === companyName
     );
     if (idx !== -1) {
@@ -71,7 +80,7 @@ export default function Index() {
   // Handle search icon press
   const handleSearchIconPress = () => {
     if (search.trim() === "") return;
-    const idx = companyData.four_wheeler_companies.findIndex((company) =>
+    const idx = firebaseData.findIndex((company) =>
       company.name.toLowerCase().includes(search.toLowerCase())
     );
     if (idx !== -1) {
@@ -86,7 +95,7 @@ export default function Index() {
   // Reset carousel data if search is cleared
   React.useEffect(() => {
     if (search === "") {
-      setCarouselData(companyData.four_wheeler_companies);
+      setFilteredCompanies(firebaseData);
     }
   }, [search]);
 
@@ -106,49 +115,29 @@ export default function Index() {
       <Text style={tw`text-2xl font-bold text-center text-gray-800 my-4`}>
         FOURAGE
       </Text>
-      <View style={styles.searchBarContainer}>
-        <TextInput
-          style={styles.searchBar}
-          placeholder="Enter Company name"
-          placeholderTextColor="#888"
+      <View style={tw`w-[95%] self-center mt-4 mb-2 relative z-20`}>
+        <SearchBar
           value={search}
-          onChangeText={(text) => {
+          onChange={(text) => {
             setSearch(text);
             setShowDropdown(true);
           }}
           onFocus={() => setShowDropdown(true)}
+          onSearch={handleSearchIconPress}
         />
-        <TouchableOpacity
-          style={styles.searchIcon}
-          onPress={handleSearchIconPress}
-        >
-          <Ionicons name="search" size={22} color="#888" />
-        </TouchableOpacity>
       </View>
       {/* Dropdown */}
-      {showDropdown && dropdownData.length > 0 && (
-        <View style={styles.dropdown}>
-          <FlatList
-            data={dropdownData}
-            keyExtractor={(item) => item.name}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.dropdownItem}
-                onPress={() => handleSelectCompany(item.name)}
-              >
-                <Text style={styles.dropdownText}>{item.name}</Text>
-              </TouchableOpacity>
-            )}
-            keyboardShouldPersistTaps="handled"
-          />
-        </View>
-      )}
+      <CompanyDropdown
+        visible={showDropdown}
+        data={dropdownData}
+        onSelect={handleSelectCompany}
+      />
       <Carousel
         ref={carouselRef}
         loop
         width={width}
         height={carouselHeight}
-        data={companyData.four_wheeler_companies}
+        data={firebaseData}
         scrollAnimationDuration={1000}
         mode="vertical-stack"
         modeConfig={{
@@ -169,8 +158,9 @@ export default function Index() {
           <CompanyCard
             name={item.name}
             logo={
-              imageMap[item.logo] ||
-              {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/default.png?updatedAt=1751425679738"}
+              imageMap[item.logo] || {
+                uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/default.png?updatedAt=1751425679738",
+              }
             }
             onPress={() => {
               setSelectedCompany(item.name);
@@ -180,94 +170,7 @@ export default function Index() {
           />
         )}
       />
-      <View style={styles.pagination}>
-        {carouselData.map((_, idx) => (
-          <View
-            key={idx}
-            style={[
-              styles.dot,
-              Math.round(progressIndex) % carouselData.length === idx &&
-                styles.activeDot,
-            ]}
-          />
-        ))}
-      </View>
+      <Pagination total={carouselData.length} activeIndex={Math.round(progressIndex)} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  searchBarContainer: {
-    width: "95%",
-    alignSelf: "center",
-    marginTop: 18,
-    marginBottom: 8,
-    position: "relative",
-    zIndex: 2,
-  },
-  searchBar: {
-    width: "100%",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderWidth: 1.5,
-    borderColor: "#bbb",
-    borderRadius: 16,
-    backgroundColor: "#fff",
-    fontSize: 16,
-    color: "#222",
-    paddingRight: 40, // space for icon
-  },
-  searchIcon: {
-    position: "absolute",
-    right: 16,
-    top: "50%",
-    transform: [{ translateY: -11 }],
-    zIndex: 3,
-  },
-  dropdown: {
-    position: "absolute",
-    top: 50,
-    left: 0,
-    right: 0,
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#bbb",
-    borderRadius: 12,
-    maxHeight: 176,
-    zIndex: 10,
-    elevation: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  dropdownItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  dropdownText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  pagination: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 16,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "#ccc",
-    marginHorizontal: 5,
-  },
-  activeDot: {
-    backgroundColor: "#333",
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-  },
-});
