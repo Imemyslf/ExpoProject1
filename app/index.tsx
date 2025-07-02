@@ -21,11 +21,11 @@ import { Ionicons } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 
 const imageMap: { [key: string]: any } = {
-  "Maruti_Suzuki_logo.png": require("../assets/images/Company/Maruti_Suzuki.png"),
-  "Tata_Motors_logo.png": require("../assets/images/Company/Tata_Motors.png"),
-  "Hyundai_Motor_logo.png": require("../assets/images/Company/Hyundai_Motor_Company_logo.svg.png"),
-  "Mahindra_Mahindra_logo.png": require("../assets/images/Company/Mahindra-Logo.png"),
-  "Honda_Cars_logo.png": require("../assets/images/Company/honda-logo.png"),
+  "Maruti_Suzuki_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/Maruti_Suzuki.png?updatedAt=1751425679693"},
+  "Tata_Motors_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/Tata_Motors.png?updatedAt=1751425679701"},
+  "Hyundai_Motor_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/Hyundai_Motor_Company_logo.svg.png?updatedAt=1751425679886"},
+  "Mahindra_Mahindra_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/Mahindra-Logo.png?updatedAt=1751425679648"},
+  "Honda_Cars_logo.png": {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/honda-logo.png?updatedAt=1751425679918"},
 };
 
 export default function Index() {
@@ -42,8 +42,6 @@ export default function Index() {
     companyData.four_wheeler_companies
   );
   const [progressIndex, setProgressIndex] = useState(0);
-
-  // const carouselRef = useRef(null);
   const carouselRef = useRef<ComponentRef<typeof Carousel>>(null);
 
   // Filter companies for dropdown as user types
@@ -172,7 +170,7 @@ export default function Index() {
             name={item.name}
             logo={
               imageMap[item.logo] ||
-              require("../assets/images/Company/default.png")
+              {uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/default.png?updatedAt=1751425679738"}
             }
             onPress={() => {
               setSelectedCompany(item.name);
