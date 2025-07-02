@@ -11,8 +11,6 @@ import {
 import Carousel from "react-native-reanimated-carousel";
 import type { ComponentRef } from "react";
 
-
-
 import companyData from "./Data/Company.json";
 import { useCompany } from "./Context/StoreContext";
 import { useRouter } from "expo-router";
@@ -43,10 +41,10 @@ export default function Index() {
   const [carouselData, setCarouselData] = useState(
     companyData.four_wheeler_companies
   );
+  const [progressIndex, setProgressIndex] = useState(0);
 
   // const carouselRef = useRef(null);
   const carouselRef = useRef<ComponentRef<typeof Carousel>>(null);
-
 
   // Filter companies for dropdown as user types
   const dropdownData =
@@ -150,7 +148,6 @@ export default function Index() {
       <Carousel
         ref={carouselRef}
         loop
-        vertical
         width={width}
         height={carouselHeight}
         data={companyData.four_wheeler_companies}
@@ -158,15 +155,18 @@ export default function Index() {
         mode="vertical-stack"
         modeConfig={{
           snapDirection: "left",
-          stackInterval: 10, // Small offset for elegant effect
-          scaleInterval: 0.05, // Slight scale for depth
-          opacityInterval: 0.15, // Fade effect
-          rotateZDeg: 0, // Optional rotation, keep 0 for clean view
+          stackInterval: 10,
+          scaleInterval: 0.05,
+          opacityInterval: 0.15,
+          rotateZDeg: 0,
         }}
         pagingEnabled
         snapEnabled
         autoPlay={false}
         onSnapToItem={setActiveIndex}
+        onProgressChange={(_, absoluteProgress) => {
+          setProgressIndex(absoluteProgress);
+        }}
         renderItem={({ item }) => (
           <CompanyCard
             name={item.name}
@@ -186,7 +186,11 @@ export default function Index() {
         {carouselData.map((_, idx) => (
           <View
             key={idx}
-            style={[styles.dot, activeIndex === idx && styles.activeDot]}
+            style={[
+              styles.dot,
+              Math.round(progressIndex) % carouselData.length === idx &&
+                styles.activeDot,
+            ]}
           />
         ))}
       </View>

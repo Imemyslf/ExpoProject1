@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Alert,
   ScrollView,
   TouchableWithoutFeedback,
@@ -20,7 +19,7 @@ const InvoicePage = () => {
   const [prices, setPrices] = useState<Record<number, number>>({});
   const [total, setTotal] = useState<number>(0);
   const [makeImage, setMakeImage] = useState<boolean>(false);
-  const [imageUri, setImageUri] = useState<string | null>(null); // Store image URI
+  const [imageUri, setImageUri] = useState<string | null>(null); 
   const tableRef = useRef<ViewShot>(null);
 
   // Function to update price & total dynamically
@@ -107,6 +106,7 @@ const InvoicePage = () => {
             title="Confirm"
             iconName="check-all"
             iconColor="blue"
+            disabled={total <= 0}
           />
 
           {makeImage && (

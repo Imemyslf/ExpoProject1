@@ -58,7 +58,7 @@ export default function CarsScreen() {
   const { selectedCompany } = useCompany();
   const { setSelectedModelType } = useModel();
   const [company, setCompany] = useState<Company | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [progressIndex, setProgressIndex] = useState(0); // <-- Use progress index
   const router = useRouter();
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function CarsScreen() {
               }}
               pagingEnabled={true}
               data={company.models}
-              onSnapToItem={setActiveIndex}
+              onProgressChange={(_, absoluteProgress) => setProgressIndex(absoluteProgress)}
               renderItem={({ item }) => (
                 <CompanyCard
                   name={item.name}
@@ -113,7 +113,8 @@ export default function CarsScreen() {
                   key={idx}
                   style={[
                     styles.dot,
-                    activeIndex === idx && styles.activeDot
+                    Math.round(progressIndex) % company.models.length === idx &&
+                      styles.activeDot,
                   ]}
                 />
               ))}
