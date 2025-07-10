@@ -4,6 +4,8 @@ import tw from "../../tailwind";
 interface ContactProps {
   name: string;
   placeholder: string;
+  value?: string;
+  onChangeText?: (text: string) => void;
 }
 
 interface TitleProps {
