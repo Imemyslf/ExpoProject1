@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import tw from "../../tailwind"; 
+import tw from "../tailwind"; 
 
 interface UPIQRPaymentProps {
   total: number

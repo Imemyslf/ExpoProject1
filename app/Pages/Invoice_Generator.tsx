@@ -3,12 +3,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { useWork } from "../Context/StoreContext";
+import { useWork } from "../../Context/StoreContext";
 import { useState } from "react";
 import tw from "../../tailwind";
-import { Contact, Title } from "../Components/Title";
-import Table from "../Components/Table";
-import TOButton from "../Components/TOButton";
+import { Contact, Title } from "../../Components/Title";
+import Table from "../../Components/Table";
+import TOButton from "../../Components/TOButton";
 
 const InvoicePage = () => {
   const { selectedWorkType } = useWork();

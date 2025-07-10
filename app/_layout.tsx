@@ -3,8 +3,8 @@ import {
   CompanyProvider,
   ModelProvider,
   WorkProvider,
-} from "./Context/StoreContext"; // Fixed import path
-import Header from "./Components/Header"; // Import custom header
+} from "../Context/StoreContext"; // Fixed import path
+import Header from "../Components/Header"; // Import custom header
 
 export default function RootLayout() {
   return (

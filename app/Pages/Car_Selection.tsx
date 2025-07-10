@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Text, View, Dimensions } from "react-native";
-import { useCompany, useModel } from "../Context/StoreContext";
-import CompanyCard from "../Components/Pressable";
+import { useCompany, useModel } from "../../Context/StoreContext";
+import CompanyCard from "../../Components/Pressable";
 import { useRouter } from "expo-router";
 import Carousel from "react-native-reanimated-carousel";
-import Pagination from "../Components/Pagination";
-import imageMaps from "../Data/carImages";
+import Pagination from "../../Components/Pagination";
+import imageMaps from "../../Data/carImages";
 import tw from "twrnc";
-import { fetchFourWheelers } from "../firebase/fetchData";
+import { fetchFourWheelers } from "../../firebase/fetchData";
 
 // Define types for company and model
 interface Model {

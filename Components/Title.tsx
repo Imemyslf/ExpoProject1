@@ -1,5 +1,5 @@
 import { View, Text, TextInput } from "react-native";
-import tw from "../../tailwind";
+import tw from "../tailwind";
 
 interface ContactProps {
   name: string;

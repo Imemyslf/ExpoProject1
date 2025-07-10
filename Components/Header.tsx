@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
-import tw from "../../tailwind"; 
+import tw from "../tailwind"; 
 
 const Header = ({ title }: { title: string }) => {
   const navigation = useNavigation();

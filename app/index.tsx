@@ -6,15 +6,15 @@ import {
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import type { ComponentRef } from "react";
-import { useCompany } from "./Context/StoreContext";
+import { useCompany } from "../Context/StoreContext";
 import { useRouter } from "expo-router";
-import CompanyCard from "./Components/Pressable";
+import CompanyCard from "../Components/Pressable";
 import tw from "twrnc";
-import SearchBar from "./Components/SearchBar";
-import Pagination from "./Components/Pagination";
-import CompanyDropdown from "./Components/CompanyDropdown";
-import imageMap from "./Data/companyLogos";
-import { fetchFourWheelers } from "./firebase/fetchData";
+import SearchBar from "../Components/SearchBar";
+import Pagination from "../Components/Pagination";
+import CompanyDropdown from "../Components/CompanyDropdown";
+import imageMap from "../Data/companyLogos";
+import { fetchFourWheelers } from "../firebase/fetchData";
 
 const { width, height } = Dimensions.get("window");
 

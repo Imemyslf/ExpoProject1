@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text } from "react-native";
 import { IconButton } from "react-native-paper";
-import tw from "../../tailwind";
+import tw from "../tailwind";
 
 interface ButtonUIContent {
   onPress: () => void;

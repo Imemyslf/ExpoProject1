@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, ScrollView, Dimensions } from "react-native";
-import tw from "../../tailwind";
+import tw from "../tailwind";
 import TOButton from "./TOButton";
 import Animated, {
   useSharedValue,

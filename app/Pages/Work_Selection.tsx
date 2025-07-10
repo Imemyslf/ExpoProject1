@@ -10,10 +10,10 @@ import {
   FlatList,
 } from "react-native";
 import tw from "../../tailwind";
-import { fetchServices } from "../firebase/fetchData"; // <-- Import fetchServices
+import { fetchServices } from "../../firebase/fetchData"; // <-- Import fetchServices
 import { IconButton } from "react-native-paper";
 import { useRouter } from "expo-router";
-import { useWork } from "../Context/StoreContext";
+import { useWork } from "../../Context/StoreContext";
 
 // Define types
 interface WorkItem {
