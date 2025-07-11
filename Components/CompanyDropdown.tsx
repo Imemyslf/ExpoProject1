@@ -15,11 +15,17 @@ interface CompanyDropdownProps {
   onSelect: (companyName: string) => void;
 }
 
-const CompanyDropdown: React.FC<CompanyDropdownProps> = ({ visible, data, onSelect }) => {
+const CompanyDropdown: React.FC<CompanyDropdownProps> = ({
+  visible,
+  data,
+  onSelect,
+}) => {
   if (!visible || data.length === 0) return null;
 
   return (
-    <View style={tw`absolute top-12 left-0 right-0 bg-white border border-gray-300 rounded-xl max-h-44 z-50 shadow`}>
+    <View
+      style={tw`absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-xl max-h-44 z-50 shadow`}
+    >
       <FlatList
         data={data}
         keyExtractor={(item) => item.name}

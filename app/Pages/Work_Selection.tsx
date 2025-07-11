@@ -8,6 +8,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   FlatList,
+  useWindowDimensions,
 } from "react-native";
 import tw from "../../tailwind";
 import { fetchServices } from "../../firebase/fetchData"; // <-- Import fetchServices
@@ -15,7 +16,7 @@ import { IconButton } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useWork } from "../../Context/StoreContext";
 
-// Define types
+// Define typesF=
 interface WorkItem {
   name: string;
 }
@@ -25,6 +26,7 @@ interface WorkData {
 }
 
 const WorkListComponent = () => {
+  const { height } = useWindowDimensions();
   const [categorySelected, setCategorySelected] = useState<string>(
     "Regular Maintenance & Servicing"
   );
@@ -107,107 +109,114 @@ const WorkListComponent = () => {
   }
 
   return (
-    <View className="main-container" style={tw`h-full p-4`}>
-      <View className="first" style={tw`h-[50%] p-2`}>
-        <View style={tw`items-center`}>
-          <Text style={tw`font-bold text-2xl`}>Services</Text>
-        </View>
-        <View style={tw`p-2 rounded-lg`}>
-          <ScrollView
-            ref={scrollRef}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={tw`flex-row items-center`}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          >
-            {categoryKeys.map((item) => (
-              <View
-                key={item}
-                onLayout={(event) => onItemLayout(item, event)}
-                style={tw`w-70 min-w-[180px] bg-white border border-black mr-2 p-4 rounded-lg`}
-              >
-                <Text style={tw`font-bold text-black text-center`}>{item}</Text>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-
-        <View style={tw`flex-1 mt-1 p-4 rounded-lg items-center`}>
-          <Text style={tw`text-lg font-semibold text-gray-400 p-2`}>
-            Select Work From Here 👇
-          </Text>
-          <ScrollView
-            style={tw`flex-1 w-full pl-4`}
-            showsVerticalScrollIndicator={false}
-          >
-            {Array.isArray(workDatas?.services?.[categorySelected]) &&
-              workDatas.services[categorySelected]!.map((item) => (
-                <TouchableOpacity
-                  key={item.name}
-                  onPress={() => addWorkItem(item.name)}
-                  style={tw`w-70 bg-black border border-white m-1 p-3 rounded-lg`}
-                >
-                  <Text style={tw`font-bold text-white text-center`}>{item.name}</Text>
-                </TouchableOpacity>
-              ))}
-          </ScrollView>
-        </View>
-      </View>
-
-      <View className="second" style={tw`h-[50%] p-2`}>
-        <View style={tw`items-center`}>
-          <Text style={tw`text-2xl font-semibold text-black p-2`}>
-            Work Selected{" "}
-          </Text>
-        </View>
-        {/* Display Selected Work */}
-        <FlatList
-          data={workSelected}
-          keyExtractor={(item, index) => `${item}-${index}`}
-          renderItem={({ item, index }) => (
-            <View
-              style={tw`flex-row items-center m-1 pl-4 bg-gray-300 border border-white rounded-lg`}
+    <View style={tw`flex-1`}>
+      <ScrollView contentContainerStyle={tw`pb-36`}>
+        <View style={tw`p-4`}>
+          {/* Service selection */}
+          <View style={tw`mb-4`}>
+            <Text style={tw`font-bold text-2xl text-center`}>Services</Text>
+            <ScrollView
+              ref={scrollRef}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={tw`flex-row items-center mt-2`}
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
             >
-              <Text style={tw`text-black flex-1 `}>
-                {index + 1}. {item}
-              </Text>
-              <IconButton
-                icon="trash-can"
-                size={20}
-                onPress={() => removeWork(item)}
-              />
-            </View>
-          )}
-          ListEmptyComponent={
-            <Text style={tw`text-gray-500 text-center mt-2`}>
-              No work selected
-            </Text>
-          }
-          style={{ maxHeight: 250 }}
-        />
+              {categoryKeys.map((item) => (
+                <View
+                  key={item}
+                  onLayout={(event) => onItemLayout(item, event)}
+                  style={tw`w-70 min-w-[180px] bg-white border border-black mr-2 p-4 rounded-lg`}
+                >
+                  <Text style={tw`font-bold text-black text-center`}>
+                    {item}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
 
-        <View style={tw`flex-row justify-between mt-2`}>
+          {/* Work list */}
+          <View style={tw`mt-4`}>
+            <Text
+              style={tw`text-lg font-semibold text-gray-500 text-center mb-2`}
+            >
+              Select Work From Here 👇
+            </Text>
+            <ScrollView style={tw`flex-1`} showsVerticalScrollIndicator={false}>
+              {Array.isArray(workDatas?.services?.[categorySelected]) &&
+                workDatas.services[categorySelected]!.map((item) => (
+                  <TouchableOpacity
+                    key={item.name}
+                    onPress={() => addWorkItem(item.name)}
+                    style={tw`w-70 bg-black border border-white m-1 p-3 rounded-lg self-center`}
+                  >
+                    <Text style={tw`font-bold text-white text-center`}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+            </ScrollView>
+          </View>
+
+          {/* Selected Work */}
+          <View style={tw`mt-6`}>
+            <Text
+              style={tw`text-2xl font-semibold text-black text-center mb-2`}
+            >
+              Work Selected
+            </Text>
+            <View style={tw`mt-4`}>
+              {workSelected.length === 0 ? (
+                <Text style={tw`text-gray-500 text-center mt-2`}>
+                  No work selected
+                </Text>
+              ) : (
+                workSelected.map((item, index) => (
+                  <View
+                    key={`${item}-${index}`}
+                    style={tw`flex-row items-center m-1 pl-4 bg-gray-300 border border-white rounded-lg`}
+                  >
+                    <Text style={tw`text-black flex-1`}>
+                      {index + 1}. {item}
+                    </Text>
+                    <IconButton
+                      icon="trash-can"
+                      size={20}
+                      onPress={() => removeWork(item)}
+                    />
+                  </View>
+                ))
+              )}
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* Fixed Bottom Buttons */}
+      <View
+        style={tw`absolute bottom-0 left-0 w-full p-4 bg-white border-t border-gray-300 flex-row justify-between`}
+      >
+        <TouchableOpacity
+          style={tw`bg-red-300 p-3 rounded-lg flex-1 mr-2`}
+          onPress={() => setWorkSelected([])}
+        >
+          <Text style={tw`text-black text-center font-bold`}>
+            Clear Work Selected
+          </Text>
+        </TouchableOpacity>
+
+        {workSelected.length !== 0 && (
           <TouchableOpacity
-            style={tw`bg-red-300 p-3 rounded-lg flex-1 mr-2`}
-            onPress={() => setWorkSelected([])}
+            style={tw`bg-green-300 p-3 rounded-lg flex-1`}
+            onPress={handleSubmit}
           >
             <Text style={tw`text-black text-center font-bold`}>
-              Clear Work Selected
+              Submit Work Selected
             </Text>
           </TouchableOpacity>
-
-          {workSelected.length !== 0 && (
-            <TouchableOpacity
-              style={tw`bg-green-300 p-3 rounded-lg flex-1`}
-              onPress={handleSubmit}
-            >
-              <Text style={tw`text-black text-center font-bold`}>
-                Submit Work Selected
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        )}
       </View>
     </View>
   );

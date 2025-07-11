@@ -9,14 +9,35 @@ interface ModelsContextType {
   selectedModelType: string | null;
   setSelectedModelType: (modelType: string) => void;
 }
+
 interface WorkContextType {
   selectedWorkType: string[] | null;
   setSelectedWorkType: (workType: string[]) => void;
 }
 
+interface InvoiceData {
+  customerName: string;
+  customerPhone: string;
+  workDone: string[];
+  prices: Record<number, number>;
+  total: number;
+}
+
+interface InvoiceContextType {
+  invoiceData: InvoiceData | null;
+  setInvoiceData: (data: InvoiceData) => void;
+}
+
+interface TabContextType {
+  activeTab: "main" | "pdf" | "invoice";
+  setActiveTab: (tab: "main" | "pdf" | "invoice") => void;
+}
+
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 const ModelContext = createContext<ModelsContextType | undefined>(undefined);
 const WorkContext = createContext<WorkContextType | undefined>(undefined);
+const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
+const TabContext = createContext<TabContextType | undefined>(undefined);
 
 export const CompanyProvider = ({ children }: { children: ReactNode }) => {
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
@@ -29,9 +50,7 @@ export const CompanyProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const ModelProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedModelType, setSelectedModelType] = useState<string | null>(
-    null
-  );
+  const [selectedModelType, setSelectedModelType] = useState<string | null>(null);
 
   return (
     <ModelContext.Provider value={{ selectedModelType, setSelectedModelType }}>
@@ -47,6 +66,26 @@ export const WorkProvider = ({ children }: { children: ReactNode }) => {
     <WorkContext.Provider value={{ selectedWorkType, setSelectedWorkType }}>
       {children}
     </WorkContext.Provider>
+  );
+};
+
+export const InvoiceProvider = ({ children }: { children: ReactNode }) => {
+  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
+
+  return (
+    <InvoiceContext.Provider value={{ invoiceData, setInvoiceData }}>
+      {children}
+    </InvoiceContext.Provider>
+  );
+};
+
+export const TabProvider = ({ children }: { children: ReactNode }) => {
+  const [activeTab, setActiveTab] = useState<"main" | "pdf" | "invoice">("main");
+
+  return (
+    <TabContext.Provider value={{ activeTab, setActiveTab }}>
+      {children}
+    </TabContext.Provider>
   );
 };
 
@@ -74,4 +113,20 @@ export const useWork = () => {
   return context;
 };
 
-export { CompanyContext, ModelContext, WorkContext };
+export const useInvoice = () => {
+  const context = useContext(InvoiceContext);
+  if (!context) {
+    throw new Error("useInvoice must be used within an InvoiceProvider");
+  }
+  return context;
+};
+
+export const useTab = () => {
+  const context = useContext(TabContext);
+  if (!context) {
+    throw new Error("useTab must be used within a TabProvider");
+  }
+  return context;
+};
+
+export { CompanyContext, ModelContext, WorkContext, InvoiceContext, TabContext };

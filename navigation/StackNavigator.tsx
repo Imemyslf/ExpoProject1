@@ -1,9 +1,9 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import Index from "../index"; // Landing Page
-import CarsPage from "../../Pages/Car_Selection"; // Another Page
-import Header from "../../Components/Header";
+import Index from "../app/index"; // Landing Page
+import CarsPage from "../app/Pages/Car_Selection"; // Another Page
+import Header from "../Components/Header";
 
 const Stack = createStackNavigator();
 
