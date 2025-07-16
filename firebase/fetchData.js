@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
 // Fetch four wheeler companies
@@ -20,5 +20,21 @@ export async function fetchServices() {
   } catch (err) {
     console.error("Error fetching services:", err);
     return [];
+  }
+}
+
+export async function fetchLastInvoice() {
+  try {
+    const invoicesRef = collection(db, "invoices");
+    const q = query(invoicesRef, orderBy("createdAt", "desc"), limit(1));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      return { id: doc.id, ...doc.data() };
+    }
+    return null;
+  } catch (err) {
+    console.error("Error fetching last invoice:", err);
+    return null;
   }
 }

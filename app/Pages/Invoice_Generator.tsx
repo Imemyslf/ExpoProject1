@@ -45,15 +45,14 @@ const InvoicePage = () => {
   };
 
   const handleConfirm = async () => {
-    if (total <= 0 ) { //|| paymentMode === "None"
-      alert("Please enter a total and select a payment mode.");
+    if (total <= 0 ) { 
+      alert("Please enter a total.");
       return;
     }
 
     setIsSaving(true);
 
     try {
-      // Save to Firebase
       const invoiceId = await storeInvoice({
         customerName,
         customerPhone,
@@ -62,7 +61,7 @@ const InvoicePage = () => {
         workDone: selectedWorkType || [],
         prices,
         total,
-        paymentMode, // <-- added
+        paymentMode, 
       });
 
       console.log("Invoice saved successfully with ID:", invoiceId);
@@ -75,7 +74,7 @@ const InvoicePage = () => {
         workDone: selectedWorkType || [],
         prices,
         total,
-        paymentMode, // <-- added
+        paymentMode, 
       });
       setPdfReady(true);
 

@@ -11,6 +11,8 @@ import Pagination from "../../Components/Pagination";
 import CompanyDropdown from "../../Components/CompanyDropdown";
 import imageMap from "../../Data/companyLogos";
 import { fetchFourWheelers } from "../../firebase/fetchData";
+import Header from "../../Components/Header";
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -95,16 +97,14 @@ export default function Index() {
     (showDropdown && dropdownData.length > 0
       ? Math.min(dropdownData.length, 4) * 44
       : 0);
-  const PAGINATION_HEIGHT = 40;
+  const PAGINATION_HEIGHT = 70;
   const carouselHeight =
     height - HEADER_HEIGHT - SEARCH_BAR_HEIGHT - PAGINATION_HEIGHT - tabHeight;
 
   return (
     <View style={tw`flex-1 bg-gray-100`}>
-      <Text style={tw`text-2xl font-bold text-center text-gray-800 my-4`}>
-        FOURAGE
-      </Text>
-      <View style={tw`w-[95%] self-center mt-4 mb-2 relative z-20`}>
+      {/* <Header title="FOURAGE" /> */}
+      <View style={tw`w-[95%] self-center mt-4 relative z-20`}>
         <SearchBar
           value={search}
           onChange={(text) => {

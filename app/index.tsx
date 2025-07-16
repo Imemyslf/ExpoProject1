@@ -5,12 +5,14 @@ import MainInvoiceScreen from "./Tabs/MainInvoiceTab";
 import PdfShareTab from "./Tabs/PdfShareTab";
 import InvoicePDF from "./Tabs/invoicePdf";
 import { useTab } from "../Context/StoreContext"; // <-- Import the Tab context hook
+import Header from "../Components/Header"; 
 
 export default function Index() {
   const { activeTab, setActiveTab } = useTab(); // <-- Use the context
 
   return (
     <>
+      <Header title="Forage" />
       <View style={tw`flex-1`}>
         {/* Render the active screen */}
         {activeTab === "main" && <MainInvoiceScreen />}
