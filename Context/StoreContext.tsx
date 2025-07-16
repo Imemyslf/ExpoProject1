@@ -21,6 +21,7 @@ interface InvoiceData {
   workDone: string[];
   prices: Record<number, number>;
   total: number;
+  paymentMode: "UPI" | "Cash" | "None"; // <-- added
 }
 
 interface InvoiceContextType {

@@ -27,6 +27,7 @@ const InvoicePage = () => {
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [paymentMode, setPaymentMode] = useState<"UPI" | "Cash" | "None">("None");
 
   const handlePriceChange = (text: string, index: number) => {
     const parsedValue = parseFloat(text);
@@ -44,10 +45,13 @@ const InvoicePage = () => {
   };
 
   const handleConfirm = async () => {
-    if (total <= 0) return;
-    
+    if (total <= 0 ) { //|| paymentMode === "None"
+      alert("Please enter a total and select a payment mode.");
+      return;
+    }
+
     setIsSaving(true);
-    
+
     try {
       // Save to Firebase
       const invoiceId = await storeInvoice({
@@ -58,10 +62,11 @@ const InvoicePage = () => {
         workDone: selectedWorkType || [],
         prices,
         total,
+        paymentMode, // <-- added
       });
-      
+
       console.log("Invoice saved successfully with ID:", invoiceId);
-      
+
       // Update local state
       setMakeImage(true);
       setInvoiceData({
@@ -70,12 +75,12 @@ const InvoicePage = () => {
         workDone: selectedWorkType || [],
         prices,
         total,
+        paymentMode, // <-- added
       });
       setPdfReady(true);
-      
+
     } catch (error) {
       console.error("Error saving invoice:", error);
-      // You might want to show an error message to the user here
       alert("Failed to save invoice. Please try again.");
     } finally {
       setIsSaving(false);
@@ -111,11 +116,13 @@ const InvoicePage = () => {
             total={total}
             onChange={handlePriceChange}
             showFlip={makeImage}
+            paymentMode={paymentMode}
+            setPaymentMode={setPaymentMode}
           />
         </View>
 
         <View
-          style={tw`absolute bottom-0 left-0 w-full p-4 flex-row justify-around bg-white border-t border-gray-200`}
+          style={tw`absolute bottom-0 left-0 w-full p-1 flex-row justify-around bg-white border-t border-gray-200`}
         >
           <TOButton
             onPress={handleConfirm}

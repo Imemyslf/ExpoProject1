@@ -14,13 +14,23 @@ import UPIQRPayment from "./UPIQRPayment";
 
 interface TableProps {
   data: string[];
-  price: Record<number, number>; 
+  price: Record<number, number>;
   total: number;
   onChange: (text: string, index: number) => void;
   showFlip?: boolean;
+  paymentMode: "UPI" | "Cash" | "None"; // <-- add this
+  setPaymentMode: (mode: "UPI" | "Cash" | "None") => void; // <-- add this
 }
 
-const Table = ({ data, price, total, onChange, showFlip }: TableProps) => {
+const Table = ({
+  data,
+  price,
+  total,
+  onChange,
+  showFlip,
+  paymentMode,
+  setPaymentMode,
+}: TableProps) => {
   const isFlipped = useSharedValue(0);
   const [frontEvents, setFrontEvents] = useState<"auto" | "none">("auto");
   const [backEvents, setBackEvents] = useState<"auto" | "none">("none");
@@ -104,19 +114,24 @@ const Table = ({ data, price, total, onChange, showFlip }: TableProps) => {
                     {item}
                   </Text>
                   <View
-                    style={tw`w-[30%] flex flex-row pl-1 justify-center border border-black rounded-lg`}
+                    style={[
+                      tw`flex flex-row pl-1 justify-center items-center border border-black rounded-lg bg-white`,
+                      { width: 90, height: 48 }, // <-- Fixed width and height for consistency
+                    ]}
                   >
-                    <Text style={tw`w-[20%] font-semibold text-2xl`}>
+                    <Text style={tw`font-semibold text-2xl mr-1`}>
                       {"\u20B9"}
                     </Text>
                     <TextInput
-                      style={tw`w-[60%] bg-white rounded-lg text-center`}
+                      style={[
+                        tw`bg-white rounded-lg text-center`,
+                        { width: 60, height: 40, fontSize: 18 },
+                      ]}
                       keyboardType="numeric"
-                      placeholder="e.g 100"
                       value={
                         price[index] !== undefined
                           ? price[index].toString()
-                          : undefined
+                          : "0"
                       }
                       onChangeText={(text) => onChange(text, index)}
                     />
@@ -126,7 +141,7 @@ const Table = ({ data, price, total, onChange, showFlip }: TableProps) => {
 
               {/* Total Section */}
               <View
-                style={tw`flex-row justify-between items-center mt-4 py-2 px-5 rounded-xl bg-white shadow-md`}
+                style={tw`flex-row justify-between items-center mt-9 py-2 px-5 rounded-xl bg-white shadow-md`}
               >
                 <Text style={tw`font-bold text-xl`}>Total:</Text>
                 {showFlip && (
@@ -154,6 +169,30 @@ const Table = ({ data, price, total, onChange, showFlip }: TableProps) => {
       >
         <View style={tw`flex-1 justify-center p-4 items-center bg-white`}>
           <UPIQRPayment total={total} />
+          {/* Payment Mode Buttons */}
+          <View style={tw`flex-row `}>
+            <TOButton
+              title="UPI"
+              iconName="qrcode"
+              iconColor="green"
+              onPress={() => setPaymentMode("UPI")}
+              style={[
+                paymentMode === "UPI" ? tw`bg-black` : tw`bg-white`,
+              ]}
+              textStyle={paymentMode === "UPI" ? tw`text-white` : tw`text-black`}
+            />
+            <TOButton
+              title="Cash"
+              iconName="cash"
+              iconColor="blue"
+              onPress={() => setPaymentMode("Cash")}
+              style={[
+                paymentMode === "Cash" ? tw`bg-black` : tw`bg-white`,
+              ]}
+              textStyle={paymentMode === "Cash" ? tw`text-white` : tw`text-black`}
+            />
+          </View>
+
           <TOButton
             onPress={toggleFlip}
             iconName="rotate-3d-variant"
