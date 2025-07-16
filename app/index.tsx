@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import tw from "twrnc";
+import tw from "../tailwind";
 import MainInvoiceScreen from "./Tabs/MainInvoiceTab";
 import PdfShareTab from "./Tabs/PdfShareTab";
 import InvoicePDF from "./Tabs/invoicePdf";

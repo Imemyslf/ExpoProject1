@@ -12,7 +12,7 @@ interface TitleProps {
   name: string;
 }
 
-const Contact = ({ name, placeholder }: ContactProps) => {
+const Contact = ({ name, placeholder, value, onChangeText }: ContactProps) => {
   return (
     <View style={tw`flex-column p-2`}>
       {/* Wrapper around Text to limit background */}
@@ -24,6 +24,8 @@ const Contact = ({ name, placeholder }: ContactProps) => {
       <TextInput
         style={tw`bg-white w-[95%] border pl-4 rounded-lg self-center`}
         placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
       />
     </View>
   );

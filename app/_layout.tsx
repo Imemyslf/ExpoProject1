@@ -13,8 +13,8 @@ export default function RootLayout() {
     <CompanyProvider>
       <ModelProvider>
         <WorkProvider>
-          <InvoiceProvider> {/* ✅ Add this */}
-            <TabProvider> {/* ✅ Add this */}
+          <InvoiceProvider> 
+            <TabProvider> 
               <Stack
                 screenOptions={({ route }) => ({
                   header: () => <Header title={route.name} />,
@@ -23,7 +23,7 @@ export default function RootLayout() {
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="Pages/Car_Selection" />
                 <Stack.Screen name="Pages/Invoice_Generator" />
-                <Stack.Screen name="Pages/Work_Selection.tsx" />
+                <Stack.Screen name="Pages/Work_Selection" />
               </Stack>
             </TabProvider>
           </InvoiceProvider>

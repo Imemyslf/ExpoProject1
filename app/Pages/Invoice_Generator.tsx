@@ -9,17 +9,21 @@ import tw from "../../tailwind";
 import { Contact, Title } from "../../Components/Title";
 import Table from "../../Components/Table";
 import TOButton from "../../Components/TOButton";
-import { useInvoice, useTab } from "../../Context/StoreContext";
+import { useInvoice, useTab, useCompany, useModel } from "../../Context/StoreContext";
+import { storeInvoice } from "../../firebase/storeData";
 
 const InvoicePage = () => {
   const { selectedWorkType } = useWork();
   const { setInvoiceData } = useInvoice();
   const { setActiveTab } = useTab();
+  const { selectedCompany } = useCompany();
+  const { selectedModelType } = useModel();
 
   const [prices, setPrices] = useState<Record<number, number>>({});
   const [total, setTotal] = useState<number>(0);
   const [makeImage, setMakeImage] = useState<boolean>(false);
   const [pdfReady, setPdfReady] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -39,17 +43,43 @@ const InvoicePage = () => {
     setTotal(newTotal);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (total <= 0) return;
-    setMakeImage(true);
-    setInvoiceData({
-      customerName,
-      customerPhone,
-      workDone: selectedWorkType || [],
-      prices,
-      total,
-    });
-    setPdfReady(true);
+    
+    setIsSaving(true);
+    
+    try {
+      // Save to Firebase
+      const invoiceId = await storeInvoice({
+        customerName,
+        customerPhone,
+        company: selectedCompany || "N/A",
+        carModel: selectedModelType || "N/A",
+        workDone: selectedWorkType || [],
+        prices,
+        total,
+      });
+      
+      console.log("Invoice saved successfully with ID:", invoiceId);
+      
+      // Update local state
+      setMakeImage(true);
+      setInvoiceData({
+        customerName,
+        customerPhone,
+        workDone: selectedWorkType || [],
+        prices,
+        total,
+      });
+      setPdfReady(true);
+      
+    } catch (error) {
+      console.error("Error saving invoice:", error);
+      // You might want to show an error message to the user here
+      alert("Failed to save invoice. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handlePdfPress = () => {
@@ -89,10 +119,10 @@ const InvoicePage = () => {
         >
           <TOButton
             onPress={handleConfirm}
-            title="Confirm"
+            title={isSaving ? "Saving..." : "Confirm"}
             iconName="check-all"
             iconColor="blue"
-            disabled={total <= 0}
+            disabled={total <= 0 || isSaving}
           />
 
           {pdfReady && (
