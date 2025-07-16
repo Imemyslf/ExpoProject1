@@ -30,8 +30,8 @@ interface InvoiceContextType {
 }
 
 interface TabContextType {
-  activeTab: "main" | "pdf" | "invoice";
-  setActiveTab: (tab: "main" | "pdf" | "invoice") => void;
+  activeTab: "main"  | "invoice";
+  setActiveTab: (tab: "main" | "invoice") => void;
 }
 
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
@@ -81,7 +81,7 @@ export const InvoiceProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const TabProvider = ({ children }: { children: ReactNode }) => {
-  const [activeTab, setActiveTab] = useState<"main" | "pdf" | "invoice">("main");
+  const [activeTab, setActiveTab] = useState<"main" | "invoice">("main");
 
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab }}>

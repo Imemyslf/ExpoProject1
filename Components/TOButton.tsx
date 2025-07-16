@@ -32,7 +32,7 @@ const TOButton: React.FC<ButtonUIContent> = ({
           ? tw`h-11 w-[45%] m-2 flex-row items-center justify-center rounded-lg mt-4 border border-gray-400`
           : tw`h-11 w-[15%] m-2 flex-row items-center justify-center rounded-lg border border-gray-400`,
         disabled && { backgroundColor: "#e5e7eb", opacity: 0.6 },
-        style, // <-- apply custom style
+        style, 
       ]}
     >
       {title && (

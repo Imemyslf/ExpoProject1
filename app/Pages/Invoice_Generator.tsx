@@ -100,12 +100,17 @@ const InvoicePage = () => {
             placeholder="Eg. John Wick"
             value={customerName}
             onChangeText={setCustomerName}
+            autoComplete="name"
+            textContentType="name"
           />
           <Contact
             name="Customer Ph no:"
             placeholder="Eg. 1234567890"
             value={customerPhone}
             onChangeText={setCustomerPhone}
+            autoComplete="tel"
+            textContentType="telephoneNumber"
+            keyboardType="phone-pad"
           />
 
           <Title name="INVOICE" />
@@ -121,7 +126,7 @@ const InvoicePage = () => {
         </View>
 
         <View
-          style={tw`absolute bottom-0 left-0 w-full p-1 flex-row justify-around bg-white border-t border-gray-200`}
+          style={tw`absolute bottom-0 left-0 w-full p-1 flex-row justify-around `}
         >
           <TOButton
             onPress={handleConfirm}

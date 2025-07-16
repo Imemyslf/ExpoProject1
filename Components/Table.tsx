@@ -79,7 +79,7 @@ const Table = ({
         style={[tw`w-[85%]`, frontAnimatedStyle]}
         pointerEvents={frontEvents}
       >
-        <View style={tw`m-2 rounded-lg bg-white`}>
+        <View style={tw`m-2 rounded-lg`}>
           {/* Header */}
           <View
             style={tw`flex flex-row justify-between bg-gray-800 border-b border-gray-300 py-2 rounded-lg`}
@@ -167,7 +167,7 @@ const Table = ({
         style={[tw`w-[90%]`, backAnimatedStyle]}
         pointerEvents={backEvents}
       >
-        <View style={tw`flex-1 justify-center p-4 items-center bg-white`}>
+        <View style={tw`flex-1 justify-center p-4 items-center `}>
           <UPIQRPayment total={total} />
           {/* Payment Mode Buttons */}
           <View style={tw`flex-row `}>

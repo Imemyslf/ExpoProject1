@@ -1,79 +1,82 @@
-
-import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import React, { useRef } from "react";
+import { View, Button, Alert, ScrollView } from "react-native";
+import { captureRef } from "react-native-view-shot";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import tw from "../../tailwind";
-import UPIQRPayment from "../../Components/UPIQRPayment";
-import { fetchLastInvoice } from "../../firebase/fetchData";
-
-interface InvoiceData {
-  customerName: string;
-  customerPhone: string;
-  paymentMode?: string;
-  workDone: string[];
-  prices: Record<number, number>;
-  total: number;
-}
+import Invoice from "../../Components/InvoicePDFComponent";
 
 export default function InvoicePDF() {
-  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
+  const invoiceRef = useRef(null);
 
-  useEffect(() => {
-    fetchLastInvoice().then((data) => {
-      if (data) {
-        const { id, ...rest } = data;
-        setInvoiceData(rest as InvoiceData);
-      }
-    });
-  }, []);
+  const generateAndShare = async () => {
+    try {
+      // 1. Capture invoice as base64 image
+      const base64 = await captureRef(invoiceRef, {
+        format: "png",
+        quality: 1,
+        result: "base64",
+      });
 
-  if (!invoiceData) {
-    return (
-      <View style={tw`flex-1 justify-center items-center`}>
-        <Text style={tw`text-lg text-gray-600`}>No invoice data found.</Text>
-      </View>
-    );
-  }
+      // 2. Send to backend
+      const response = await fetch("http://192.168.0.102:3000/upload-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: base64 }),
+      });
 
-  const { customerName, customerPhone, workDone, prices, total, paymentMode } =
-    invoiceData;
+      if (!response.ok) throw new Error("Failed to generate PDF from backend");
+
+      const blob = await response.blob();
+
+      // 3. Convert blob to base64 using FileReader safely
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        if (typeof reader.result === "string") {
+          const base64data = reader.result.split(",")[1]; // Remove data prefix
+
+          const fileUri = `${FileSystem.documentDirectory}invoice.pdf`;
+
+          await FileSystem.writeAsStringAsync(fileUri, base64data, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          await Sharing.shareAsync(fileUri, {
+            mimeType: "application/pdf",
+            dialogTitle: "Share Invoice PDF",
+          });
+        } else {
+          Alert.alert("Error", "Unable to process the PDF file.");
+        }
+      };
+
+      reader.readAsDataURL(blob); // triggers onloadend
+    } catch (error) {
+      console.error("❌ PDF generation error:", error);
+      Alert.alert("Error", "Failed to generate or share PDF.");
+    }
+  };
 
   return (
-    <ScrollView style={tw`flex-1 bg-white px-4 py-6`}>
-      <Text style={tw`text-2xl font-bold text-center mb-6`}>🧾 INVOICE</Text>
+    <>
+      <View style={tw`flex-1 bg-white`}>
+        <ScrollView
+          contentContainerStyle={tw`p-4`}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* 🔽 Invoice Content to be Captured */}
+          <View ref={invoiceRef} collapsable={false}>
+            <Invoice />
+          </View>
+        </ScrollView>
 
-      <View style={tw`mb-4`}>
-        <Text style={tw`text-base font-semibold mb-1`}>
-          Customer: {customerName}
-        </Text>
-        <Text style={tw`text-base font-semibold`}>Phone: {customerPhone}</Text>
-        <Text style={tw`text-base font-semibold`}>
-          Payment Mode: {paymentMode ?? "N/A"}
-        </Text>
-      </View>
-
-      <View style={tw`flex-row border-b border-gray-300 py-2 mb-2`}>
-        <Text style={tw`w-2/3 font-bold text-lg`}>Work Done</Text>
-        <Text style={tw`w-1/3 font-bold text-lg text-right`}>Price (₹)</Text>
-      </View>
-
-      {workDone.map((item, index) => (
-        <View key={index} style={tw`flex-row py-2 border-b border-gray-100`}>
-          <Text style={tw`w-2/3 text-base`}>{item}</Text>
-          <Text style={tw`w-1/3 text-base text-right`}>
-            ₹ {prices[index]?.toFixed(2) ?? "0.00"}
-          </Text>
+        <View style={tw`p-4 border-t border-gray-200`}>
+          <Button
+            title="📤 Generate & Share Invoice PDF"
+            onPress={generateAndShare}
+          />
         </View>
-      ))}
-
-      <View style={tw`mt-6 border-t border-gray-300 pt-3`}>
-        <Text style={tw`text-xl font-bold text-right text-green-700`}>
-          Total: ₹ {total.toFixed(2)}
-        </Text>
       </View>
-
-      <View style={tw`mt-8 items-center mb-15`}>
-        <UPIQRPayment total={total} />
-      </View>
-    </ScrollView>
+    </>
   );
 }
