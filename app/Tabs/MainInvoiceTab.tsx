@@ -26,7 +26,7 @@ export default function Index() {
   const [filteredCompanies, setFilteredCompanies] = useState(firebaseData);
   const [progressIndex, setProgressIndex] = useState(0);
   const carouselRef = useRef<ComponentRef<typeof Carousel>>(null);
-  const tabHeight = 60;
+  
 
   useEffect(() => {
     async function loadData() {
@@ -99,7 +99,7 @@ export default function Index() {
       : 0);
   const PAGINATION_HEIGHT = 70;
   const carouselHeight =
-    height - HEADER_HEIGHT - SEARCH_BAR_HEIGHT - PAGINATION_HEIGHT - tabHeight;
+    height - HEADER_HEIGHT - SEARCH_BAR_HEIGHT - PAGINATION_HEIGHT ;
 
   return (
     <View style={tw`flex-1 bg-gray-100`}>

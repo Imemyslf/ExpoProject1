@@ -11,6 +11,7 @@ import Table from "../../Components/Table";
 import TOButton from "../../Components/TOButton";
 import { useInvoice, useTab, useCompany, useModel } from "../../Context/StoreContext";
 import { storeInvoice } from "../../firebase/storeData";
+import { useRouter } from "expo-router";
 
 const InvoicePage = () => {
   const { selectedWorkType } = useWork();
@@ -18,16 +19,19 @@ const InvoicePage = () => {
   const { setActiveTab } = useTab();
   const { selectedCompany } = useCompany();
   const { selectedModelType } = useModel();
-
+  
   const [prices, setPrices] = useState<Record<number, number>>({});
   const [total, setTotal] = useState<number>(0);
+  
   const [makeImage, setMakeImage] = useState<boolean>(false);
   const [pdfReady, setPdfReady] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-
+  
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [paymentMode, setPaymentMode] = useState<"UPI" | "Cash" | "None">("None");
+  
+  const router = useRouter();
 
   const handlePriceChange = (text: string, index: number) => {
     const parsedValue = parseFloat(text);
@@ -88,6 +92,7 @@ const InvoicePage = () => {
 
   const handlePdfPress = () => {
     setActiveTab("invoice");
+    router.push("/Tabs/invoicePdf");
   };
 
   return (
