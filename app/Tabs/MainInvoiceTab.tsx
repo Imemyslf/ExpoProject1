@@ -4,7 +4,7 @@ import Carousel from "react-native-reanimated-carousel";
 import type { ComponentRef } from "react";
 import { useCompany } from "../../Context/StoreContext";
 import { useRouter } from "expo-router";
-import CompanyCard from "../../Components/Pressable";
+import { CompanyCard } from "../../Components/Pressable";
 import tw from "twrnc";
 import SearchBar from "../../Components/SearchBar";
 import Pagination from "../../Components/Pagination";
@@ -12,7 +12,6 @@ import CompanyDropdown from "../../Components/CompanyDropdown";
 import imageMap from "../../Data/companyLogos";
 import { fetchFourWheelers } from "../../firebase/fetchData";
 import Header from "../../Components/Header";
-
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,7 +25,6 @@ export default function Index() {
   const [filteredCompanies, setFilteredCompanies] = useState(firebaseData);
   const [progressIndex, setProgressIndex] = useState(0);
   const carouselRef = useRef<ComponentRef<typeof Carousel>>(null);
-  
 
   useEffect(() => {
     async function loadData() {
@@ -99,17 +97,16 @@ export default function Index() {
       : 0);
   const PAGINATION_HEIGHT = 70;
   const carouselHeight =
-    height - HEADER_HEIGHT - SEARCH_BAR_HEIGHT - PAGINATION_HEIGHT ;
+    height - HEADER_HEIGHT - SEARCH_BAR_HEIGHT - PAGINATION_HEIGHT;
 
   return (
     <View style={tw`flex-1 bg-gray-100`}>
-      {/* <Header title="FOURAGE" /> */}
+      {/* Header */}
       <View style={tw`w-[95%] self-center mt-4 relative z-20`}>
         <SearchBar
           value={search}
           onChange={(text) => {
             setSearch(text);
-            setShowDropdown(true);
           }}
           onFocus={() => setShowDropdown(true)}
           onSearch={handleSearchIconPress}
@@ -122,7 +119,6 @@ export default function Index() {
           />
         )}
       </View>
-
       <Carousel
         ref={carouselRef}
         loop
@@ -161,6 +157,8 @@ export default function Index() {
           />
         )}
       />
+
+      {/* Pagination */}
       <Pagination
         total={carouselData.length}
         activeIndex={Math.round(progressIndex)}

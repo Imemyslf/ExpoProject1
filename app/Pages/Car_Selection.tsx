@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Text, View, Dimensions } from "react-native";
 import { useCompany, useModel } from "../../Context/StoreContext";
-import CompanyCard from "../../Components/Pressable";
+import { CarCard } from "../../Components/Pressable";
 import { useRouter } from "expo-router";
 import Carousel from "react-native-reanimated-carousel";
 import Pagination from "../../Components/Pagination";
@@ -37,9 +37,7 @@ export default function CarsScreen() {
 
   useEffect(() => {
     if (selectedCompany) {
-      const foundCompany = firebaseData.find(
-        (c) => c.name === selectedCompany
-      );
+      const foundCompany = firebaseData.find((c) => c.name === selectedCompany);
       setCompany(foundCompany || null);
     }
   }, [selectedCompany, firebaseData]);
@@ -48,7 +46,11 @@ export default function CarsScreen() {
 
   return (
     <View style={tw`flex-1 bg-gray-100 p-5`}>
-      <Text style={tw`text-2xl font-bold mb-2 text-center`}>
+      <Text
+        style={tw`text-2xl w-[100%] font-semibold mb-2 text-center`}
+        numberOfLines={1} // Ensures the text stays on one line
+        ellipsizeMode="tail" // Adds "..." if the text overflows
+      >
         Models for {selectedCompany}
       </Text>
       <View style={tw`flex-1 justify-center items-center`}>
@@ -57,7 +59,7 @@ export default function CarsScreen() {
             <Carousel
               loop
               width={width * 0.9}
-              height={400}
+              height={500}
               autoPlay={false}
               mode="parallax"
               modeConfig={{
@@ -66,23 +68,28 @@ export default function CarsScreen() {
               }}
               pagingEnabled={true}
               data={company.models}
-              onProgressChange={(_, absoluteProgress) => setProgressIndex(absoluteProgress)}
+              onProgressChange={(_, absoluteProgress) =>
+                setProgressIndex(absoluteProgress)
+              }
               renderItem={({ item }) => (
-                <CompanyCard
+                <CarCard
                   name={item.name}
                   logo={
-                    imageMaps[selectedCompany ?? ""]?.[item.name] ||
-                    { uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/default.png?updatedAt=1751425679738" }
+                    imageMaps[selectedCompany ?? ""]?.[item.name] || {
+                      uri: "https://ik.imagekit.io/3eq4ilonj/Cars%20&%20Company/Companies/default.png?updatedAt=1751425679738",
+                    }
                   }
                   onPress={() => {
                     setSelectedModelType(item.name);
                     router.push("/Pages/Work_Selection");
                   }}
-                  showLogo={true}
                 />
               )}
             />
-            <Pagination total={company?.models?.length ?? 0} activeIndex={Math.round(progressIndex)} />
+            <Pagination
+              total={company?.models?.length ?? 0}
+              activeIndex={Math.round(progressIndex)}
+            />
           </>
         ) : (
           <Text>No models found</Text>
