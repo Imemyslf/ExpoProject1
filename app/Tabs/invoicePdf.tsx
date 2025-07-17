@@ -5,12 +5,19 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import tw from "../../tailwind";
 import Invoice from "../../Components/InvoicePDFComponent";
+import Constants from "expo-constants";
 
 export default function InvoicePDF() {
   const invoiceRef = useRef(null);
 
   const generateAndShare = async () => {
     try {
+      // Ensure BACKEND_URL exists
+      const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+      if (!backendUrl) {
+        throw new Error("BACKEND_URL is not defined in expoConfig.extra");
+      }
+
       // 1. Capture invoice as base64 image
       const base64 = await captureRef(invoiceRef, {
         format: "png",
@@ -19,7 +26,7 @@ export default function InvoicePDF() {
       });
 
       // 2. Send to backend
-      const response = await fetch("http://192.168.0.102:3000/upload-image", {
+      const response = await fetch(`${backendUrl}upload-image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageBase64: base64 }),
