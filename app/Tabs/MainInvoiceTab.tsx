@@ -11,7 +11,6 @@ import Pagination from "../../Components/Pagination";
 import CompanyDropdown from "../../Components/CompanyDropdown";
 import imageMap from "../../Data/companyLogos";
 import { fetchFourWheelers } from "../../firebase/fetchData";
-import Header from "../../Components/Header";
 
 const { width, height } = Dimensions.get("window");
 
