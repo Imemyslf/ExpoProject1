@@ -3,6 +3,8 @@
 .github
 .env
 app.config.js
+forage-sk.json
+
 # dependencies
 node_modules/
 
