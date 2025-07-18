@@ -1,5 +1,5 @@
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
-import { db } from "./firebaseConfig";
+import { db } from "../firebaseConfig";
 
 // Fetch four wheeler companies
 export async function fetchFourWheelers() {
