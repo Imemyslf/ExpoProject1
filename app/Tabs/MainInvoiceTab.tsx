@@ -10,7 +10,7 @@ import SearchBar from "../../Components/SearchBar";
 import Pagination from "../../Components/Pagination";
 import CompanyDropdown from "../../Components/CompanyDropdown";
 import imageMap from "../../Data/companyLogos";
-import { fetchFourWheelers } from "../../firebase/fetchData";
+import Constants from "expo-constants";
 
 const { width, height } = Dimensions.get("window");
 
@@ -20,16 +20,23 @@ export default function Index() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [firebaseData, setFirebaseData] = useState<any[]>([]);
-  const [filteredCompanies, setFilteredCompanies] = useState(firebaseData);
+  const [fetchedData, setFetchedData] = useState<any[]>([]);
+  const [filteredCompanies, setFilteredCompanies] = useState(fetchedData);
   const [progressIndex, setProgressIndex] = useState(0);
   const carouselRef = useRef<ComponentRef<typeof Carousel>>(null);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const companies = await fetchFourWheelers();
-        setFirebaseData(companies);
+        console.log("Fetching companies...");
+        const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+        console.log("Backend URL:", backendUrl);
+        const response = await fetch(
+          `${backendUrl}data/automotive-companies`
+        );
+        const data = await response.json();
+        console.log("Fetched companies:", data);
+        setFetchedData(data);
       } catch (err) {
         console.error("Error fetching companies:", err);
       }
@@ -41,21 +48,21 @@ export default function Index() {
   const dropdownData = useMemo(
     () =>
       search.length > 0
-        ? firebaseData.filter((company) =>
+        ? fetchedData.filter((company) =>
             company.name.toLowerCase().includes(search.toLowerCase())
           )
         : [],
-    [search, firebaseData]
+    [search, fetchedData]
   );
 
   // Memoize carouselData if you have any filtering/sorting logic
-  const carouselData = useMemo(() => firebaseData, [firebaseData]);
+  const carouselData = useMemo(() => fetchedData, [fetchedData]);
 
   // Handle dropdown selection
   const handleSelectCompany = (companyName: string) => {
     setSearch(companyName);
     setShowDropdown(false);
-    const idx = firebaseData.findIndex((c) => c.name === companyName);
+    const idx = fetchedData.findIndex((c) => c.name === companyName);
     if (idx !== -1) {
       setActiveIndex(idx);
       // Scroll carousel to the selected index
@@ -68,7 +75,7 @@ export default function Index() {
   // Handle search icon press
   const handleSearchIconPress = () => {
     if (search.trim() === "") return;
-    const idx = firebaseData.findIndex((company) =>
+    const idx = fetchedData.findIndex((company) =>
       company.name.toLowerCase().includes(search.toLowerCase())
     );
     if (idx !== -1) {
@@ -83,9 +90,9 @@ export default function Index() {
   // Reset carousel data if search is cleared
   React.useEffect(() => {
     if (search === "") {
-      setFilteredCompanies(firebaseData);
+      setFilteredCompanies(fetchedData);
     }
-  }, [search]);
+  }, [search, fetchedData]);
 
   // Estimate heights of header, search bar, and pagination
   const HEADER_HEIGHT = 48;
@@ -123,7 +130,7 @@ export default function Index() {
         loop
         width={width}
         height={carouselHeight}
-        data={firebaseData}
+        data={fetchedData}
         scrollAnimationDuration={1000}
         mode="vertical-stack"
         modeConfig={{

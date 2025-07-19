@@ -2,6 +2,7 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import { useWork } from "../../Context/StoreContext";
 import { useState } from "react";
@@ -10,8 +11,9 @@ import { Contact, Title } from "../../Components/Title";
 import Table from "../../Components/Table";
 import TOButton from "../../Components/TOButton";
 import { useInvoice, useTab, useCompany, useModel } from "../../Context/StoreContext";
-import { storeInvoice } from "../../firebase/storeData";
 import { useRouter } from "expo-router";
+import axios from "axios";
+import Constants from "expo-constants";
 
 const InvoicePage = () => {
   const { selectedWorkType } = useWork();
@@ -19,18 +21,18 @@ const InvoicePage = () => {
   const { setActiveTab } = useTab();
   const { selectedCompany } = useCompany();
   const { selectedModelType } = useModel();
-  
+
   const [prices, setPrices] = useState<Record<number, number>>({});
   const [total, setTotal] = useState<number>(0);
-  
+
   const [makeImage, setMakeImage] = useState<boolean>(false);
   const [pdfReady, setPdfReady] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  
+
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [paymentMode, setPaymentMode] = useState<"UPI" | "Cash" | "None">("None");
-  
+
   const router = useRouter();
 
   const handlePriceChange = (text: string, index: number) => {
@@ -49,42 +51,50 @@ const InvoicePage = () => {
   };
 
   const handleConfirm = async () => {
-    if (total <= 0 ) { 
-      alert("Please enter a total.");
+    if (total <= 0) {
+      Alert.alert("Please enter a total.");
       return;
     }
 
     setIsSaving(true);
 
     try {
-      const invoiceId = await storeInvoice({
-        customerName,
-        customerPhone,
-        company: selectedCompany || "N/A",
-        carModel: selectedModelType || "N/A",
-        workDone: selectedWorkType || [],
-        prices,
-        total,
-        paymentMode, 
-      });
+      const payload = {
+        "customerName": customerName,
+        "customerPhone":customerPhone,
+        "company": selectedCompany || "N/A",
+        "carModel": selectedModelType || "N/A",
+        "workDone": selectedWorkType || [],
+        "prices": Object.values(prices),
+        "total":total,
+        "paymentMode":paymentMode,
+      };
 
-      console.log("Invoice saved successfully with ID:", invoiceId);
+      const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+      const response = await axios.post(
+        `${backendUrl}data/store-invoice`,
+        payload
+      );
 
-      // Update local state
-      setMakeImage(true);
-      setInvoiceData({
-        customerName,
-        customerPhone,
-        workDone: selectedWorkType || [],
-        prices,
-        total,
-        paymentMode, 
-      });
-      setPdfReady(true);
+      if (response.status === 200 || response.status === 201) {
+        console.log("Invoice saved successfully:", response.data);
 
+        setMakeImage(true);
+        setInvoiceData({
+          customerName,
+          customerPhone,
+          workDone: selectedWorkType || [],
+          prices: Object.values(prices),
+          total,
+          paymentMode,
+        });
+        setPdfReady(true);
+      } else {
+        throw new Error("Failed to save invoice.");
+      }
     } catch (error) {
       console.error("Error saving invoice:", error);
-      alert("Failed to save invoice. Please try again.");
+      Alert.alert("Failed to save invoice. Please try again.");
     } finally {
       setIsSaving(false);
     }

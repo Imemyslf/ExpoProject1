@@ -6,8 +6,9 @@ import { useRouter } from "expo-router";
 import Carousel from "react-native-reanimated-carousel";
 import Pagination from "../../Components/Pagination";
 import imageMaps from "../../Data/carImages";
-import tw from "twrnc";
-import { fetchFourWheelers } from "../../firebase/fetchData";
+import tw from "../../tailwind"; // Use correct tw import as per instructions
+import axios from "axios";
+import Constants from "expo-constants";
 
 // Define types for company and model
 interface Model {
@@ -24,23 +25,32 @@ export default function CarsScreen() {
   const { setSelectedModelType } = useModel();
   const [company, setCompany] = useState<Company | null>(null);
   const [progressIndex, setProgressIndex] = useState(0);
-  const [firebaseData, setFirebaseData] = useState<any[]>([]);
+  const [fetchedData, setFetchedData] = useState<any[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     async function loadCompanies() {
-      const allCompanies = await fetchFourWheelers();
-      setFirebaseData(allCompanies);
+      try {
+        console.log("Fetching companies...");
+        const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+        const response = await axios.get(
+          `${backendUrl}data/automotive-companies`
+);
+        setFetchedData(response.data);
+      } catch (err) {
+        console.error("Error fetching companies:", err);
+      }
     }
     loadCompanies();
   }, []);
 
   useEffect(() => {
     if (selectedCompany) {
-      const foundCompany = firebaseData.find((c) => c.name === selectedCompany);
+      console.log("Selected company:", selectedCompany);
+      const foundCompany = fetchedData.find((c) => c.name === selectedCompany);
       setCompany(foundCompany || null);
     }
-  }, [selectedCompany, firebaseData]);
+  }, [selectedCompany, fetchedData]);
 
   const { width } = Dimensions.get("window");
 

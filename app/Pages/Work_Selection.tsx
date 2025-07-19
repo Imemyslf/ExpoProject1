@@ -11,12 +11,13 @@ import {
   useWindowDimensions,
 } from "react-native";
 import tw from "../../tailwind";
-import { fetchServices } from "../../firebase/fetchData"; // <-- Import fetchServices
+import axios from "axios";
 import { IconButton } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useWork } from "../../Context/StoreContext";
+import Constants from "expo-constants";
 
-// Define typesF=
+// Define types
 interface WorkItem {
   name: string;
 }
@@ -83,18 +84,35 @@ const WorkListComponent = () => {
 
   // Handle submit action
   const handleSubmit = () => {
-    console.log("Submitting Work Selected:", workSelected);
     setSelectedWorkType(workSelected);
     router.push("/Pages/Invoice_Generator");
   };
 
   useEffect(() => {
     async function loadServices() {
-      const servicesData = await fetchServices();
-      // Assuming only one document in the collection
-      if (servicesData.length > 0) {
-        const { id, ...services } = servicesData[0];
+      try {
+        const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+        const response = await axios.get(`${backendUrl}data/workshop-services`);
+        console.log(
+          "Fetched workshop services:",
+          JSON.stringify(response.data, null, 2)
+        );
+
+        // Transform the response to map categories to their services
+        // Remove duplicate 'id' field and use only '_id' if needed
+        // Structure: { services: { [category]: WorkItem[] } }
+        const services: Record<string, WorkItem[]> = {};
+        response.data.forEach((item: any) => {
+          services[item.category] = item.services.map((service: any) => ({
+            name: service.name,
+            price: service.price,
+          }));
+        });
+
+        console.log("Transformed services:", JSON.stringify(services, null, 2));
         setWorkDatas({ services });
+      } catch (error) {
+        console.error("Error fetching workshop services:", error);
       }
     }
     loadServices();

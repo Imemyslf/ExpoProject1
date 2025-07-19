@@ -2,7 +2,7 @@ import React, { useEffect, useState, forwardRef } from "react";
 import { View, Text } from "react-native";
 import tw from "../tailwind";
 import UPIQRPayment from "../Components/UPIQRPayment";
-import { fetchLastInvoice } from "../firebase/fetchData";
+import Constants from "expo-constants";
 
 interface InvoiceData {
   customerName: string;
@@ -17,12 +17,21 @@ const InvoicePDF = forwardRef<View>((props, ref) => {
   const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
 
   useEffect(() => {
-    fetchLastInvoice().then((data) => {
-      if (data) {
-        const { id, ...rest } = data;
-        setInvoiceData(rest as InvoiceData);
+    async function fetchLastInvoice() {
+      try {
+        const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+        const response = await fetch(`${backendUrl}data/last-invoice`);
+        const data = await response.json();
+        if (data) {
+          const { id, ...rest } = data;
+          setInvoiceData(rest as InvoiceData);
+        }
+      } catch (err) {
+        console.error("Error fetching last invoice:", err);
+        setInvoiceData(null);
       }
-    });
+    }
+    fetchLastInvoice();
   }, []);
 
   if (!invoiceData) {

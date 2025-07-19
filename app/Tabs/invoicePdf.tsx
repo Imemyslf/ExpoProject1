@@ -14,6 +14,7 @@ export default function InvoicePDF() {
     try {
       // Ensure BACKEND_URL exists
       const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+      console.log("Backend URL:", backendUrl);
       if (!backendUrl) {
         throw new Error("BACKEND_URL is not defined in expoConfig.extra");
       }
@@ -26,7 +27,7 @@ export default function InvoicePDF() {
       });
 
       // 2. Send to backend
-      const response = await fetch(`${backendUrl}upload-image`, {
+      const response = await fetch(`${backendUrl}img/upload-image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageBase64: base64 }),

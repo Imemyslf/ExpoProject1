@@ -2,8 +2,8 @@
 
 .github
 .env
-app.config.js
-forage-sk.json
+app.config.ts
+.gitignore
 
 # dependencies
 node_modules/
