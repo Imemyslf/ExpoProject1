@@ -19,8 +19,8 @@ const InvoicePDF = forwardRef<View>((props, ref) => {
   useEffect(() => {
     async function fetchLastInvoice() {
       try {
-        const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
-        const response = await fetch(`${backendUrl}data/last-invoice`);
+        // const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+        const response = await fetch(`https://backend-deploy-engine-production.up.railway.app/data/last-invoice`);
         const data = await response.json();
         if (data) {
           const { id, ...rest } = data;

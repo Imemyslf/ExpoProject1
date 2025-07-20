@@ -70,9 +70,9 @@ const InvoicePage = () => {
         "paymentMode":paymentMode,
       };
 
-      const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+      // const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
       const response = await axios.post(
-        `${backendUrl}data/store-invoice`,
+        `https://backend-deploy-engine-production.up.railway.app/data/store-invoice`,
         payload
       );
 

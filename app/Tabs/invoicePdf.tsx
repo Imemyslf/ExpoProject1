@@ -13,11 +13,11 @@ export default function InvoicePDF() {
   const generateAndShare = async () => {
     try {
       // Ensure BACKEND_URL exists
-      const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
-      console.log("Backend URL:", backendUrl);
-      if (!backendUrl) {
-        throw new Error("BACKEND_URL is not defined in expoConfig.extra");
-      }
+      // const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+      // console.log("Backend URL:", backendUrl);
+      // if (!backendUrl) {
+      //   throw new Error("BACKEND_URL is not defined in expoConfig.extra");
+      // }
 
       // 1. Capture invoice as base64 image
       const base64 = await captureRef(invoiceRef, {
@@ -27,7 +27,7 @@ export default function InvoicePDF() {
       });
 
       // 2. Send to backend
-      const response = await fetch(`${backendUrl}img/upload-image`, {
+      const response = await fetch(`https://backend-deploy-engine-production.up.railway.app/img/upload-image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageBase64: base64 }),

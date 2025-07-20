@@ -91,8 +91,8 @@ const WorkListComponent = () => {
   useEffect(() => {
     async function loadServices() {
       try {
-        const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
-        const response = await axios.get(`${backendUrl}data/workshop-services`);
+        // const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+        const response = await axios.get(`https://backend-deploy-engine-production.up.railway.app/data/workshop-services`);
         console.log(
           "Fetched workshop services:",
           JSON.stringify(response.data, null, 2)

@@ -32,7 +32,7 @@ export default function Index() {
         const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
         console.log("Backend URL:", backendUrl);
         const response = await fetch(
-          `${backendUrl}data/automotive-companies`
+          `https://backend-deploy-engine-production.up.railway.app/data/automotive-companies`
         );
         const data = await response.json();
         console.log("Fetched companies:", data);

@@ -32,9 +32,9 @@ export default function CarsScreen() {
     async function loadCompanies() {
       try {
         console.log("Fetching companies...");
-        const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
+        // const backendUrl = Constants?.expoConfig?.extra?.BACKEND_URL;
         const response = await axios.get(
-          `${backendUrl}data/automotive-companies`
+          `https://backend-deploy-engine-production.up.railway.app/data/automotive-companies`
 );
         setFetchedData(response.data);
       } catch (err) {
@@ -58,11 +58,10 @@ export default function CarsScreen() {
     <View style={tw`flex-1 bg-gray-100 p-5`}>
       <Text
         style={tw`text-2xl w-[100%] font-semibold mb-2 text-center`}
-        numberOfLines={1} // Ensures the text stays on one line
-        ellipsizeMode="tail" // Adds "..." if the text overflows
       >
         Models for {selectedCompany}
       </Text>
+
       <View style={tw`flex-1 justify-center items-center`}>
         {company?.models ? (
           <>
